@@ -30,48 +30,54 @@ Follow these steps to set up the project on your local machine:
    git clone https://github.com/Adams-404/AI-Academy.git
 Navigate to the project directory:
 
-bash
-Copy code
+```bash
 cd ai-academy
-Install dependencies:
+```
 
-bash
-Copy code
+*Install dependencies*:
+
+```bash
 npm install
-Start the development server:
+```
 
-bash
+*Start the development server*:
+
+```bash
 Copy code
 
 npm run dev
-📖 Usage
+
+📖 **Usage**
 Open your browser and navigate to http://localhost:5173 to access the application.
 
 Browse through the available courses, check the schedule for upcoming events, and view the project showcase.
 Use the interactive tools to enhance your learning experience and apply AI concepts in real-time projects.
 
-🌍 Deployment
+🌍 **Deployment**
 To deploy the application for production, follow these steps:
 
 Build the project:
 
-bash
-Copy code
+```bash
 npm run build
+```
+
 Serve the build directory using a static server or deploy it on platforms like Vercel or Netlify.
 
-🤝 Contributing
+🤝 **Contributing**
 We welcome contributions from the community. To contribute:
 
-Fork the repository.
-Create a new branch for your feature or bug fix.
-Submit a pull request with a detailed description of your changes.
-Contribution Guidelines
-Follow the Code of Conduct.
-Adhere to the coding standards and naming conventions used in the project.
-Write clear, concise commit messages.
+*Fork the repository*.
+*Create a new branch for your feature or bug fix*.
+*Submit a pull request with a detailed description of your changes*.
 
-🌟 Acknowledgements
+**Contribution Guidelines**
+
+*Follow the Code of Conduct*.
+*Adhere to the coding standards and naming conventions used in the project*.
+*Write clear, concise commit messages*.
+
+🌟 *Acknowledgements*
 Special thanks to the GDG on Campus Gombe State University team for their support and guidance.
 Inspired by Google's Material Design principles to provide a seamless and intuitive user experience.
 
