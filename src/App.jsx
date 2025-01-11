@@ -13,7 +13,7 @@ function App() {
   const [isNavExpanded, setIsNavExpanded] = useState(true)
 
   return (
-    <Router>
+    <Router basename="/AI-Academy">
       <div className="app">
         <DesktopNav onToggle={setIsNavExpanded} />
         <MobileNav />
