@@ -1,0 +1,21 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Language detection
+*.js linguist-language=JavaScript
+*.jsx linguist-language=JavaScript
+*.ts linguist-language=TypeScript
+*.tsx linguist-language=TypeScript
+*.css linguist-language=CSS
+*.scss linguist-language=SCSS
+*.html linguist-language=HTML
+
+# Documentation
+*.md linguist-documentation
+LICENSE linguist-documentation
+*.txt linguist-documentation
+
+# Dependencies and build files
+dist/* linguist-generated
+node_modules/* linguist-vendored
+build/* linguist-generated 
