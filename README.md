@@ -42,11 +42,14 @@ Start the development server:
 
 bash
 Copy code
+
 npm run dev
 📖 Usage
-Open your browser and navigate to http://localhost:3000 to access the application.
+Open your browser and navigate to http://localhost:5173 to access the application.
+
 Browse through the available courses, check the schedule for upcoming events, and view the project showcase.
 Use the interactive tools to enhance your learning experience and apply AI concepts in real-time projects.
+
 🌍 Deployment
 To deploy the application for production, follow these steps:
 
@@ -67,8 +70,6 @@ Contribution Guidelines
 Follow the Code of Conduct.
 Adhere to the coding standards and naming conventions used in the project.
 Write clear, concise commit messages.
-📄 License
-This project is licensed under the MIT License. See the LICENSE file for details.
 
 🌟 Acknowledgements
 Special thanks to the GDG on Campus Gombe State University team for their support and guidance.
