@@ -1,0 +1,223 @@
+/* Import Google Material Symbols */
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
+
+/* Desktop Navigation */
+.desktop-nav {
+  width: 72px;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  background: var(--background-default);
+  border-right: 1px solid var(--border-color);
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1000;
+  padding: 16px 8px;
+  overflow-x: hidden;
+}
+
+.desktop-nav.expanded {
+  width: 256px;
+}
+
+/* Navigation Header */
+.nav-header {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  gap: 12px;
+  position: relative;
+  margin-bottom: 32px;
+}
+
+.nav-logo {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.nav-title {
+  font-family: 'Google Sans', sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--text-primary);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  white-space: nowrap;
+}
+
+.expanded .nav-title {
+  opacity: 1;
+}
+
+/* Navigation Links */
+.nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  gap: 12px;
+  text-decoration: none;
+  color: var(--text-secondary);
+  border-radius: 12px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.nav-link:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--primary-blue);
+}
+
+.nav-link.active {
+  background: rgba(66, 133, 244, 0.1);
+  color: var(--primary-blue);
+}
+
+.nav-link-content {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.nav-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: inherit;
+}
+
+.expanded .nav-link-content {
+  opacity: 1;
+}
+
+/* Toggle Button */
+.nav-toggle {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+}
+
+.nav-toggle:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--text-primary);
+}
+
+/* Icon Styles */
+.material-symbols-rounded {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-variation-settings: 
+    'FILL' 0,
+    'wght' 300,
+    'GRAD' 0,
+    'opsz' 24;
+}
+
+.nav-link .material-symbols-rounded {
+  flex-shrink: 0;
+}
+
+.nav-link:hover .material-symbols-rounded {
+  font-variation-settings: 
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
+}
+
+.nav-link.active .material-symbols-rounded {
+  font-variation-settings: 
+    'FILL' 0,
+    'wght' 500,
+    'GRAD' 0,
+    'opsz' 24;
+}
+
+/* Mobile Navigation */
+.mobile-nav {
+  display: none; /* Hide by default */
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  background: var(--background-default);
+  border-top: 1px solid var(--border-color);
+  justify-content: space-around;
+  align-items: center;
+  z-index: 100;
+}
+
+.mobile-nav .nav-link {
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  height: 56px;
+  margin: 0;
+  border-radius: 0;
+  padding: 8px 0;
+}
+
+.mobile-nav .nav-link.active {
+  background: transparent;
+  color: var(--primary-blue);
+}
+
+.mobile-nav .nav-label {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .desktop-nav {
+    display: none; /* Hide desktop nav on mobile */
+  }
+
+  .mobile-nav {
+    display: flex; /* Show mobile nav */
+  }
+
+  .main-content {
+    margin-left: 0 !important;
+    width: 100% !important;
+    padding: 16px;
+    margin-bottom: 56px; /* Add space for mobile nav */
+  }
+}
+
+/* Ensure proper content margins */
+.main-content {
+  margin-left: 72px;
+  min-height: 100vh;
+  padding: 24px;
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  width: calc(100% - 72px);
+  box-sizing: border-box;
+}
+
+.main-content.nav-expanded {
+  margin-left: 256px;
+  width: calc(100% - 256px);
+} 
