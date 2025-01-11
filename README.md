@@ -43,9 +43,8 @@ npm install
 *Start the development server*:
 
 ```bash
-Copy code
-
 npm run dev
+```
 
 📖 **Usage**
 Open your browser and navigate to http://localhost:5173 to access the application.
@@ -56,20 +55,26 @@ Use the interactive tools to enhance your learning experience and apply AI conce
 🌍 **Deployment**
 To deploy the application for production, follow these steps:
 
-Build the project:
+**Build the project**:
 
 ```bash
 npm run build
 ```
 
-Serve the build directory using a static server or deploy it on platforms like Vercel or Netlify.
+*Serve the build directory using a static server or deploy it on platforms like Vercel or Netlify*. 
 
-🤝 **Contributing**
+```bash
+npm run deploy
+```
+
+🤝 *Contributing*
 We welcome contributions from the community. To contribute:
 
-*Fork the repository*.
-*Create a new branch for your feature or bug fix*.
-*Submit a pull request with a detailed description of your changes*.
+**Fork the repository**
+
+**Create a new branch for your feature or bug fix**
+
+**Submit a pull request with a detailed description of your changes**
 
 **Contribution Guidelines**
 
@@ -77,8 +82,10 @@ We welcome contributions from the community. To contribute:
 *Adhere to the coding standards and naming conventions used in the project*.
 *Write clear, concise commit messages*.
 
-🌟 *Acknowledgements*
-Special thanks to the GDG on Campus Gombe State University team for their support and guidance.
-Inspired by Google's Material Design principles to provide a seamless and intuitive user experience.
+🌟 **Acknowledgements**
+
+*Special thanks to the GDG on Campus Gombe State University team for their support and guidance*.
+
+*Inspired by Google's Material Design principles to provide a seamless and intuitive user experience*.
 
 Join us in transforming AI education at Gombe State University through the AI Academy!
