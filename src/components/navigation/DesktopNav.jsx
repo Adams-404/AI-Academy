@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
+import gsuGdgLogo from '../../assets/gsu-gdg-logo.svg'
 import './Navigation.css'
 
 const DesktopNav = ({ onToggle }) => {
@@ -41,7 +42,11 @@ const DesktopNav = ({ onToggle }) => {
   return (
     <nav className={`desktop-nav ${isExpanded ? 'expanded' : ''}`}>
       <div className="nav-header">
-        <img src="/logo.svg" alt="AI Academy" className="nav-logo" />
+        <img 
+          src={gsuGdgLogo}
+          alt="GSU GDG Academy" 
+          className="nav-logo" 
+        />
         <span className="nav-title">AI Academy</span>
         <button 
           className="nav-toggle"

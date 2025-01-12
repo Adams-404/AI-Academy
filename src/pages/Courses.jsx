@@ -425,7 +425,7 @@ const Courses = () => {
               <>
                 <button 
                   className="button button-primary"
-                  onClick={() => navigate(`/materials/week${week.week}`)}
+                  onClick={() => navigate('/WeekOneMaterials')}
                 >
                   <FaBook /> Access Materials
                 </button>
@@ -456,6 +456,10 @@ const Courses = () => {
         </div>
       </div>
     )
+  }
+
+  const handleAccessMaterials = () => {
+    navigate('/week-one-materials')
   }
 
   return (

@@ -3,21 +3,15 @@
 
 /* Desktop Navigation */
 .desktop-nav {
-  width: 72px;
-  height: 100vh;
   position: fixed;
-  left: 0;
   top: 0;
-  background: var(--background-default);
-  border-right: 1px solid var(--border-color);
-  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  left: 0;
+  bottom: 0;
+  width: 240px;
+  background: white;
+  padding: 1.5rem;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
   z-index: 1000;
-  padding: 16px 8px;
-  overflow-x: hidden;
-}
-
-.desktop-nav.expanded {
-  width: 256px;
 }
 
 /* Navigation Header */
@@ -28,12 +22,18 @@
   gap: 12px;
   position: relative;
   margin-bottom: 32px;
+  background: var(--background-default);
+  z-index: 1;
 }
 
 .nav-logo {
   width: 32px;
   height: 32px;
   flex-shrink: 0;
+  object-fit: contain;
+  display: block;
+  filter: brightness(1);
+  background: transparent;
 }
 
 .nav-title {
@@ -97,24 +97,7 @@
 
 /* Toggle Button */
 .nav-toggle {
-  position: absolute;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  background: transparent;
-  border: none;
-  padding: 8px;
-  cursor: pointer;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-secondary);
-}
-
-.nav-toggle:hover {
-  background: rgba(0, 0, 0, 0.05);
-  color: var(--text-primary);
+  display: none;
 }
 
 /* Icon Styles */
@@ -154,17 +137,15 @@
 
 /* Mobile Navigation */
 .mobile-nav {
-  display: none; /* Hide by default */
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 56px;
-  background: var(--background-default);
-  border-top: 1px solid var(--border-color);
-  justify-content: space-around;
-  align-items: center;
-  z-index: 100;
+  background: white;
+  padding: 0.25rem;
+  border-top: 1px solid #e8eaed;
+  z-index: 1000;
+  display: none;
 }
 
 .mobile-nav .nav-link {
@@ -172,11 +153,17 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px;
-  height: 56px;
+  gap: 2px;
+  height: 55px;
   margin: 0;
   border-radius: 0;
-  padding: 8px 0;
+  padding: 4px 0;
+  -webkit-tap-highlight-color: transparent; /* Remove tap highlight on iOS */
+  user-select: none; /* Prevent text selection */
+}
+
+.mobile-nav .nav-link:active {
+  background: transparent; /* Remove active state background */
 }
 
 .mobile-nav .nav-link.active {
@@ -185,8 +172,14 @@
 }
 
 .mobile-nav .nav-label {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
+}
+
+.mobile-nav .material-symbols-rounded {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
 }
 
 /* Responsive adjustments */
@@ -203,7 +196,7 @@
     margin-left: 0 !important;
     width: 100% !important;
     padding: 16px;
-    margin-bottom: 56px; /* Add space for mobile nav */
+    margin-bottom: 44px; /* Add space for mobile nav */
   }
 }
 

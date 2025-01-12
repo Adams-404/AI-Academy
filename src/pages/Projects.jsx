@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import { 
-  FilterOutline,
-  AddOutline,
-  LinkOutline,
-  PersonOutline,
-  TimeOutline
-} from 'react-ionicons'
+  FaFilter as FilterOutline,
+  FaPlus as AddOutline,
+  FaLink as LinkOutline,
+  FaUser as PersonOutline,
+  FaClock as TimeOutline
+} from 'react-icons/fa'
 import './Projects.css'
 
 const Projects = () => {

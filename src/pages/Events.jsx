@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import { 
-  CalendarOutline,
-  PeopleOutline,
-  LocationOutline,
-  VideocamOutline,
-  AddOutline
-} from 'react-ionicons'
+  FaCalendar as CalendarOutline,
+  FaUsers as PeopleOutline,
+  FaMapMarkerAlt as LocationOutline,
+  FaVideo as VideocamOutline,
+  FaPlus as AddOutline
+} from 'react-icons/fa'
 import './Events.css'
 
 const Events = () => {
@@ -48,7 +48,7 @@ const Events = () => {
             <p className="page-description">Join our AI learning sessions and workshops</p>
           </div>
           <button className="button button-primary">
-            <AddOutline color="white" />
+            <AddOutline />
             <span>Add to Calendar</span>
           </button>
         </div>
@@ -73,7 +73,7 @@ const Events = () => {
         {events.map(event => (
           <div key={event.id} className="event-card">
             <div className="event-date">
-              <CalendarOutline color="#5f6368" />
+              <CalendarOutline />
               <div>
                 <p className="date">{event.date}</p>
                 <p className="time">{event.time}</p>
@@ -93,14 +93,14 @@ const Events = () => {
               <div className="event-meta">
                 <div className="meta-item">
                   {event.isOnline ? (
-                    <VideocamOutline color="#5f6368" />
+                    <VideocamOutline />
                   ) : (
-                    <LocationOutline color="#5f6368" />
+                    <LocationOutline />
                   )}
                   <span>{event.location}</span>
                 </div>
                 <div className="meta-item">
-                  <PeopleOutline color="#5f6368" />
+                  <PeopleOutline />
                   <span>{event.attendees} attendees</span>
                 </div>
               </div>

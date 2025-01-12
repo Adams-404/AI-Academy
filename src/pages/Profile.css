@@ -1,203 +1,416 @@
-.header-actions {
-  display: flex;
-  gap: 8px;
+.profile-wrapper {
+  padding: 2rem;
+  background: #f8f9fa;
+  min-height: 100vh;
 }
 
 .profile-grid {
+  max-width: 1200px;
+  margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 24px;
-  margin-top: 24px;
+  gap: 2rem;
 }
 
-/* User Info Card */
-.user-info {
+/* Card Styles */
+.user-card,
+.progress-card,
+.status-card,
+.achievements-card {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.progress-card {
   grid-column: 1 / -1;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 24px;
 }
 
-.avatar-section {
+/* User Card */
+.user-header {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
-.avatar {
+.user-avatar {
   width: 80px;
   height: 80px;
   border-radius: 50%;
   object-fit: cover;
 }
 
-.user-details h2 {
+.user-info h1 {
   font-family: 'Google Sans', sans-serif;
-  font-size: 24px;
-  font-weight: 500;
-  color: var(--text-primary);
-  margin-bottom: 8px;
+  font-size: 1.75rem;
+  color: #202124;
+  margin: 0 0 0.5rem;
 }
 
-.meta-info {
-  display: flex;
-  gap: 16px;
-}
-
-.meta-item {
+.user-role {
   display: flex;
   align-items: center;
-  gap: 8px;
-  color: var(--text-secondary);
-  font-size: 14px;
+  gap: 0.5rem;
+  color: #1a73e8;
+  font-size: 1rem;
 }
 
-/* Progress Overview */
-.progress-overview {
-  grid-column: 1 / 2;
+.user-bio {
+  color: #5f6368;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
 }
 
-.progress-stats {
+.social-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.social-links a {
+  color: #5f6368;
+  font-size: 1.25rem;
+  transition: color 0.2s ease;
+}
+
+.social-links a:hover {
+  color: #1a73e8;
+}
+
+/* Card Headers */
+.progress-header,
+.status-header,
+.achievements-header {
   display: flex;
   align-items: center;
-  gap: 24px;
-  margin-top: 24px;
+  gap: 1rem;
+  margin-bottom: 2rem;
 }
 
-.circular-progress {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  background: conic-gradient(
-    var(--primary-blue) calc(var(--progress) * 1%),
-    var(--background-secondary) 0deg
-  );
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
+/* SVG Icons */
+.progress-icon,
+.status-icon,
+.achievement-icon {
+  width: 24px;
+  height: 24px;
+  fill: #1a73e8;
 }
 
-.circular-progress::before {
-  content: '';
-  position: absolute;
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  background: var(--background-default);
-}
-
-.progress-value {
-  position: relative;
+h2 {
   font-family: 'Google Sans', sans-serif;
-  font-size: 24px;
-  font-weight: 500;
-  color: var(--text-primary);
+  font-size: 1.5rem;
+  color: #202124;
+  margin: 0;
 }
 
-.progress-details {
-  flex: 1;
+/* Progress Circle */
+.progress-circle {
+  width: 200px;
+  margin: 0 auto 2rem;
 }
 
-.current-module {
+.progress-circle svg {
+  width: 100%;
+  height: auto;
+  transform: rotate(-90deg);
+}
+
+.progress-bg {
+  fill: none;
+  stroke: #f1f3f4;
+  stroke-width: 12;
+}
+
+.progress-bar {
+  fill: none;
+  stroke: #1a73e8;
+  stroke-width: 12;
+  stroke-linecap: round;
+  transition: stroke-dasharray 1s ease;
+}
+
+.progress-number {
+  font-family: 'Google Sans', sans-serif;
+  font-size: 48px;
+  fill: #202124;
+  text-anchor: middle;
+  transform: rotate(90deg);
+}
+
+.progress-text {
   font-family: 'Google Sans', sans-serif;
   font-size: 16px;
-  color: var(--text-primary);
-  margin-bottom: 8px;
+  fill: #5f6368;
+  text-anchor: middle;
+  transform: rotate(90deg);
 }
 
-.completion-status {
-  color: var(--text-secondary);
-  font-size: 14px;
+/* Module Info */
+.module-info {
+  display: flex;
+  justify-content: center;
+  gap: 4rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e8eaed;
+}
+
+.info-item {
+  text-align: center;
+}
+
+.info-number {
+  display: block;
+  font-family: 'Google Sans', sans-serif;
+  font-size: 2rem;
+  color: #1a73e8;
+  margin-bottom: 0.5rem;
+}
+
+.info-label {
+  color: #5f6368;
+  font-size: 0.875rem;
+}
+
+/* Status Card */
+.status-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.status-item h3 {
+  font-family: 'Google Sans', sans-serif;
+  font-size: 0.875rem;
+  color: #5f6368;
+  margin: 0 0 0.5rem;
+}
+
+.status-item p {
+  font-family: 'Google Sans', sans-serif;
+  font-size: 1.125rem;
+  color: #202124;
+  margin: 0;
 }
 
 /* Achievements Card */
 .achievements-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  margin-top: 16px;
+  gap: 1rem;
 }
 
 .achievement-item {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 16px;
-  background-color: var(--background-secondary);
+  gap: 1rem;
+  padding: 1rem;
+  background: #f8f9fa;
   border-radius: 8px;
+  transition: transform 0.2s ease;
 }
 
-.achievement-icon {
-  font-size: 24px;
+.achievement-item:hover {
+  transform: translateX(4px);
+}
+
+.achievement-badge {
+  font-size: 1.5rem;
+  line-height: 1;
 }
 
 .achievement-details h3 {
   font-family: 'Google Sans', sans-serif;
-  font-size: 16px;
-  font-weight: 500;
-  color: var(--text-primary);
-  margin-bottom: 4px;
+  font-size: 1rem;
+  color: #202124;
+  margin: 0 0 0.25rem;
 }
 
 .achievement-details p {
-  color: var(--text-secondary);
-  font-size: 14px;
+  font-size: 0.875rem;
+  color: #5f6368;
+  margin: 0;
 }
 
-/* Recent Activity Card */
-.activity-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-top: 16px;
-}
-
-.activity-item {
-  padding: 16px;
-  border-left: 3px solid var(--primary-green);
-  background-color: var(--background-secondary);
-  border-radius: 0 8px 8px 0;
-}
-
-.activity-content h3 {
-  font-family: 'Google Sans', sans-serif;
-  font-size: 16px;
-  font-weight: 500;
-  color: var(--text-primary);
-  margin-bottom: 4px;
-}
-
-.activity-content p {
-  color: var(--text-secondary);
-  font-size: 14px;
-}
-
-/* Mobile Adjustments */
+/* Responsive Design */
 @media (max-width: 768px) {
+  .profile-wrapper {
+    padding: 1rem;
+  }
+
   .profile-grid {
     grid-template-columns: 1fr;
   }
 
-  .user-info {
-    flex-direction: column;
-    gap: 24px;
-    text-align: center;
-  }
-
-  .avatar-section {
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .meta-info {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .progress-stats {
+  .user-header {
     flex-direction: column;
     text-align: center;
   }
+
+  .social-links {
+    justify-content: center;
+  }
+
+  .progress-circle {
+    width: 180px;
+  }
+
+  .module-info {
+    gap: 2rem;
+  }
+}
+
+/* Avatar Container */
+.avatar-container {
+  position: relative;
+  display: inline-block;
+}
+
+.edit-profile-btn {
+  position: absolute;
+  bottom: -5px;
+  right: -5px;
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #1a73e8 0%, #4285f4 100%);
+  color: white;
+  border: 3px solid white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
+}
+
+.edit-profile-btn:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 16px rgba(26, 115, 232, 0.4);
+  background: linear-gradient(135deg, #1557b0 0%, #1a73e8 100%);
+}
+
+.edit-profile-btn:active {
+  transform: translateY(0) scale(0.95);
+  box-shadow: 0 2px 8px rgba(26, 115, 232, 0.3);
+}
+
+.edit-profile-btn svg {
+  font-size: 16px;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+}
+
+/* Weeks Progress */
+.weeks-progress {
+  padding: 2rem;
+}
+
+.progress-bar {
+  height: 8px;
+  background: #f1f3f4;
+  border-radius: 4px;
+  margin-bottom: 2rem;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #1a73e8;
+  border-radius: 4px;
+  transition: width 1s ease;
+}
+
+.weeks-info {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 1rem;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.edit-modal {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.edit-modal h2 {
+  margin-bottom: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #5f6368;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #e8eaed;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.avatar-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.avatar-upload img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.form-actions button {
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.form-actions button[type="button"] {
+  background: #f1f3f4;
+  color: #5f6368;
+}
+
+.form-actions button[type="submit"] {
+  background: #1a73e8;
+  color: white;
+}
+
+.form-actions button:hover {
+  opacity: 0.9;
 } 
