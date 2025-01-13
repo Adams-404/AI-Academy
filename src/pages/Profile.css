@@ -1,416 +1,115 @@
-.profile-wrapper {
-  padding: 2rem;
-  background: #f8f9fa;
-  min-height: 100vh;
-}
-
-.profile-grid {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 2rem;
-}
-
-/* Card Styles */
-.user-card,
-.progress-card,
-.status-card,
-.achievements-card {
-  background: white;
-  border-radius: 12px;
-  padding: 2rem;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-}
-
-.progress-card {
-  grid-column: 1 / -1;
-}
-
-/* User Card */
-.user-header {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
-}
-
-.user-avatar {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.user-info h1 {
-  font-family: 'Google Sans', sans-serif;
-  font-size: 1.75rem;
-  color: #202124;
-  margin: 0 0 0.5rem;
-}
-
-.user-role {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: #1a73e8;
-  font-size: 1rem;
-}
-
-.user-bio {
-  color: #5f6368;
-  line-height: 1.5;
-  margin-bottom: 1.5rem;
-}
-
-.social-links {
-  display: flex;
-  gap: 1rem;
-}
-
-.social-links a {
-  color: #5f6368;
-  font-size: 1.25rem;
-  transition: color 0.2s ease;
-}
-
-.social-links a:hover {
-  color: #1a73e8;
-}
-
-/* Card Headers */
-.progress-header,
-.status-header,
-.achievements-header {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 2rem;
-}
-
-/* SVG Icons */
-.progress-icon,
-.status-icon,
-.achievement-icon {
-  width: 24px;
-  height: 24px;
-  fill: #1a73e8;
-}
-
-h2 {
-  font-family: 'Google Sans', sans-serif;
-  font-size: 1.5rem;
-  color: #202124;
-  margin: 0;
-}
-
-/* Progress Circle */
-.progress-circle {
-  width: 200px;
-  margin: 0 auto 2rem;
-}
-
-.progress-circle svg {
+.profile-container {
   width: 100%;
-  height: auto;
-  transform: rotate(-90deg);
+  padding: 1rem;
+  background: var(--background-light);
 }
 
-.progress-bg {
-  fill: none;
-  stroke: #f1f3f4;
-  stroke-width: 12;
+.profile-card {
+  background: white;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 400px;
+  margin: 2rem auto;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-.progress-bar {
-  fill: none;
-  stroke: #1a73e8;
-  stroke-width: 12;
-  stroke-linecap: round;
-  transition: stroke-dasharray 1s ease;
-}
-
-.progress-number {
-  font-family: 'Google Sans', sans-serif;
-  font-size: 48px;
-  fill: #202124;
-  text-anchor: middle;
-  transform: rotate(90deg);
-}
-
-.progress-text {
-  font-family: 'Google Sans', sans-serif;
-  font-size: 16px;
-  fill: #5f6368;
-  text-anchor: middle;
-  transform: rotate(90deg);
-}
-
-/* Module Info */
-.module-info {
+.profile-content {
+  padding: 2rem;
   display: flex;
-  justify-content: center;
-  gap: 4rem;
-  padding-top: 1rem;
-  border-top: 1px solid #e8eaed;
-}
-
-.info-item {
+  flex-direction: column;
+  align-items: center;
   text-align: center;
 }
 
-.info-number {
-  display: block;
-  font-family: 'Google Sans', sans-serif;
-  font-size: 2rem;
-  color: #1a73e8;
-  margin-bottom: 0.5rem;
-}
-
-.info-label {
-  color: #5f6368;
-  font-size: 0.875rem;
-}
-
-/* Status Card */
-.status-content {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.status-item h3 {
-  font-family: 'Google Sans', sans-serif;
-  font-size: 0.875rem;
-  color: #5f6368;
-  margin: 0 0 0.5rem;
-}
-
-.status-item p {
-  font-family: 'Google Sans', sans-serif;
-  font-size: 1.125rem;
-  color: #202124;
-  margin: 0;
-}
-
-/* Achievements Card */
-.achievements-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.achievement-item {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem;
-  background: #f8f9fa;
-  border-radius: 8px;
-  transition: transform 0.2s ease;
-}
-
-.achievement-item:hover {
-  transform: translateX(4px);
-}
-
-.achievement-badge {
-  font-size: 1.5rem;
-  line-height: 1;
-}
-
-.achievement-details h3 {
-  font-family: 'Google Sans', sans-serif;
-  font-size: 1rem;
-  color: #202124;
-  margin: 0 0 0.25rem;
-}
-
-.achievement-details p {
-  font-size: 0.875rem;
-  color: #5f6368;
-  margin: 0;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .profile-wrapper {
-    padding: 1rem;
-  }
-
-  .profile-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .user-header {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .social-links {
-    justify-content: center;
-  }
-
-  .progress-circle {
-    width: 180px;
-  }
-
-  .module-info {
-    gap: 2rem;
-  }
-}
-
-/* Avatar Container */
-.avatar-container {
-  position: relative;
-  display: inline-block;
-}
-
-.edit-profile-btn {
-  position: absolute;
-  bottom: -5px;
-  right: -5px;
-  width: 36px;
-  height: 36px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #1a73e8 0%, #4285f4 100%);
-  color: white;
-  border: 3px solid white;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
-}
-
-.edit-profile-btn:hover {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 6px 16px rgba(26, 115, 232, 0.4);
-  background: linear-gradient(135deg, #1557b0 0%, #1a73e8 100%);
-}
-
-.edit-profile-btn:active {
-  transform: translateY(0) scale(0.95);
-  box-shadow: 0 2px 8px rgba(26, 115, 232, 0.3);
-}
-
-.edit-profile-btn svg {
-  font-size: 16px;
-  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
-}
-
-/* Weeks Progress */
-.weeks-progress {
-  padding: 2rem;
-}
-
-.progress-bar {
-  height: 8px;
-  background: #f1f3f4;
-  border-radius: 4px;
-  margin-bottom: 2rem;
-  overflow: hidden;
-}
-
-.progress-fill {
-  height: 100%;
-  background: #1a73e8;
-  border-radius: 4px;
-  transition: width 1s ease;
-}
-
-.weeks-info {
-  display: flex;
-  justify-content: space-between;
-  padding: 0 1rem;
-}
-
-/* Modal */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
-.edit-modal {
-  background: white;
-  border-radius: 12px;
-  padding: 2rem;
-  width: 90%;
-  max-width: 500px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-}
-
-.edit-modal h2 {
+.profile-avatar {
   margin-bottom: 1.5rem;
 }
 
-.form-group {
-  margin-bottom: 1.5rem;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 0.5rem;
-  color: #5f6368;
-}
-
-.form-group input,
-.form-group textarea {
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #e8eaed;
-  border-radius: 8px;
-  font-size: 1rem;
-}
-
-.avatar-upload {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-}
-
-.avatar-upload img {
+.profile-avatar img {
   width: 100px;
   height: 100px;
   border-radius: 50%;
   object-fit: cover;
+  border: 4px solid white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-  margin-top: 2rem;
-}
-
-.form-actions button {
-  padding: 0.75rem 1.5rem;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  font-size: 1rem;
-}
-
-.form-actions button[type="button"] {
-  background: #f1f3f4;
-  color: #5f6368;
-}
-
-.form-actions button[type="submit"] {
-  background: #1a73e8;
+.avatar-initials {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: var(--primary-blue);
   color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 500;
+  border: 4px solid white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-.form-actions button:hover {
-  opacity: 0.9;
+.profile-content h1 {
+  font-family: 'Google Sans', sans-serif;
+  font-size: 1.5rem;
+  margin: 0 0 0.5rem 0;
+  color: var(--text-primary);
+}
+
+.profile-email {
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+.logout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 2rem;
+  border: none;
+  border-radius: 24px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: var(--background-secondary);
+  color: var(--text-secondary);
+  width: 100%;
+  max-width: 200px;
+}
+
+.logout-btn:hover {
+  background: #fee8e7;
+  color: #d93025;
+}
+
+@media (max-width: 480px) {
+  .profile-container {
+    padding: 0;
+  }
+
+  .profile-card {
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+    min-height: 100vh;
+  }
+
+  .profile-content {
+    padding: 2rem 1rem;
+  }
+
+  .logout-btn {
+    max-width: 100%;
+  }
+}
+
+.error-message {
+  color: #d93025;
+  margin: 1rem 0;
+  text-align: center;
+  padding: 1rem;
+  background: #fee8e7;
+  border-radius: 8px;
 } 
