@@ -3,11 +3,8 @@ import { NavLink } from 'react-router-dom'
 import gsuGdgLogo from '../../assets/footer-logo.svg'
 import './Navigation.css'
 
-const DesktopNav = ({ onToggle }) => {
-  const [isExpanded, setIsExpanded] = useState(true)
-
+const DesktopNav = ({ onToggle, isExpanded }) => {
   const handleToggle = () => {
-    setIsExpanded(!isExpanded)
     onToggle(!isExpanded)
   }
 

@@ -38,6 +38,7 @@ body {
   display: flex;
   min-height: 100vh;
   background: var(--background-light);
+  width: 100%;
 }
 
 .main-content {
@@ -45,6 +46,25 @@ body {
   position: relative;
   background: var(--background-light);
   min-height: 100vh;
+  transition: margin-left 0.3s ease;
+}
+
+/* Public routes */
+.main-content.public-route {
+  margin-left: 0;
+  width: 100%;
+  padding: 0;
+}
+
+/* Private routes with nav */
+.main-content.nav-expanded {
+  margin-left: var(--nav-width, 280px);
+  width: calc(100% - var(--nav-width, 280px));
+}
+
+.main-content.nav-collapsed {
+  margin-left: var(--nav-collapsed-width, 80px);
+  width: calc(100% - var(--nav-collapsed-width, 80px));
 }
 
 /* Ensure proper stacking */
@@ -181,7 +201,9 @@ body {
 
 /* Add these styles for page transitions */
 .page-transition {
-  position: relative;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 .page-enter {

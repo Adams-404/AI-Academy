@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate, Navigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import DesktopNav from './components/navigation/DesktopNav'
 import MobileNav from './components/navigation/MobileNav'
 import ScrollToTop from './components/layout/ScrollToTop'
@@ -18,28 +17,40 @@ import { AuthProvider, useAuth } from './contexts/AuthContext'
 import PrivateRoute from './components/auth/PrivateRoute'
 
 function App() {
-  const [isNavExpanded, setIsNavExpanded] = useState(true)
+  const [isNavExpanded, setIsNavExpanded] = useState(() => {
+    const savedState = localStorage.getItem('navState')
+    return savedState ? JSON.parse(savedState) : true
+  })
   const [isLoading, setIsLoading] = useState(true)
   const location = useLocation()
   const { currentUser } = useAuth()
   const navigate = useNavigate()
 
+  const isPublicRoute = ['/', '/login', '/signup'].includes(location.pathname)
+
+  useEffect(() => {
+    if (!isPublicRoute) {
+      localStorage.setItem('navState', JSON.stringify(isNavExpanded))
+    }
+  }, [isNavExpanded, isPublicRoute])
+
+  const handleNavToggle = (state) => {
+    setIsNavExpanded(state)
+  }
+
   useEffect(() => {
     if (currentUser) {
-      setTimeout(() => {
-        setIsLoading(false)
-      }, 100)
-      
+      setIsLoading(false)
       if (location.pathname === '/') {
-        navigate('/home')
+        navigate('/home', { replace: true })
       }
     } else {
       if (!['/login', '/signup', '/'].includes(location.pathname)) {
-        navigate('/login')
+        navigate('/login', { replace: true })
       }
       setIsLoading(false)
     }
-  }, [currentUser, location, navigate])
+  }, [currentUser, location.pathname, navigate])
 
   if (isLoading) {
     return null
@@ -47,67 +58,56 @@ function App() {
 
   return (
     <div className="app">
-      {currentUser && (
+      {currentUser && !isPublicRoute && (
         <>
-          <DesktopNav onToggle={setIsNavExpanded} />
+          <DesktopNav onToggle={handleNavToggle} isExpanded={isNavExpanded} />
           <MobileNav />
         </>
       )}
       <ScrollToTop />
       
-      <main className={`main-content ${isNavExpanded ? 'nav-expanded' : ''}`}>
-        <TransitionGroup component={null}>
-          <CSSTransition
-            key={location.key}
-            timeout={300}
-            classNames="page"
-            unmountOnExit
-          >
-            <div className="page-transition">
-              <Routes location={location}>
-                <Route path="/" element={
-                  currentUser ? <Navigate to="/home" /> : <Landing />
-                } />
-                <Route path="/login" element={
-                  currentUser ? <Navigate to="/home" /> : <Login />
-                } />
-                <Route path="/signup" element={
-                  currentUser ? <Navigate to="/home" /> : <Signup />
-                } />
-                <Route path="/home" element={
-                  <PrivateRoute>
-                    <Home />
-                  </PrivateRoute>
-                } />
-                <Route path="/courses" element={
-                  <PrivateRoute>
-                    <Courses />
-                  </PrivateRoute>
-                } />
-                <Route path="/WeekOneMaterials" element={
-                  <PrivateRoute>
-                    <WeekOneMaterials />
-                  </PrivateRoute>
-                } />
-                <Route path="/projects" element={
-                  <PrivateRoute>
-                    <Projects />
-                  </PrivateRoute>
-                } />
-                <Route path="/events" element={
-                  <PrivateRoute>
-                    <Events />
-                  </PrivateRoute>
-                } />
-                <Route path="/leaderboard" element={
-                  <PrivateRoute>
-                    <Leaderboard />
-                  </PrivateRoute>
-                } />
-              </Routes>
-            </div>
-          </CSSTransition>
-        </TransitionGroup>
+      <main className={`main-content ${isPublicRoute ? 'public-route' : ''} ${!isPublicRoute && isNavExpanded ? 'nav-expanded' : 'nav-collapsed'}`}>
+        <Routes location={location}>
+          <Route path="/" element={
+            currentUser ? <Navigate to="/home" replace /> : <Landing />
+          } />
+          <Route path="/login" element={
+            currentUser ? <Navigate to="/home" replace /> : <Login />
+          } />
+          <Route path="/signup" element={
+            currentUser ? <Navigate to="/home" replace /> : <Signup />
+          } />
+          <Route path="/home" element={
+            <PrivateRoute>
+              <Home />
+            </PrivateRoute>
+          } />
+          <Route path="/courses" element={
+            <PrivateRoute>
+              <Courses />
+            </PrivateRoute>
+          } />
+          <Route path="/WeekOneMaterials" element={
+            <PrivateRoute>
+              <WeekOneMaterials />
+            </PrivateRoute>
+          } />
+          <Route path="/projects" element={
+            <PrivateRoute>
+              <Projects />
+            </PrivateRoute>
+          } />
+          <Route path="/events" element={
+            <PrivateRoute>
+              <Events />
+            </PrivateRoute>
+          } />
+          <Route path="/leaderboard" element={
+            <PrivateRoute>
+              <Leaderboard />
+            </PrivateRoute>
+          } />
+        </Routes>
       </main>
     </div>
   )

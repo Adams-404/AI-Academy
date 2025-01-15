@@ -11,12 +11,13 @@
   padding: 24px 0;
   background: var(--background-default);
   position: relative;
+  width: 100%;
 }
 
 .landing-nav {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 32px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -43,12 +44,13 @@
 /* Hero Section */
 .hero-content {
   max-width: 1200px;
-  margin: 80px auto;
-  padding: 0 24px;
+  margin: 40px auto;
+  padding: 0 32px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 48px;
   align-items: center;
+  min-height: calc(100vh - 200px);
   position: relative;
 }
 
@@ -95,12 +97,13 @@
   background-color: var(--background-secondary);
   position: relative;
   overflow: hidden;
+  width: 100%;
 }
 
 .section-content {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 32px;
   text-align: center;
   position: relative;
   z-index: 1;
@@ -158,6 +161,7 @@
   position: relative;
   color: white;
   text-align: center;
+  width: 100%;
 }
 
 .cta-section .section-content {
@@ -180,12 +184,13 @@
 .landing-footer {
   padding: 48px 0;
   background-color: var(--background-secondary);
+  width: 100%;
 }
 
 .footer-content {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 32px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -404,4 +409,13 @@
 @keyframes blink {
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
+}
+
+/* Keep mobile padding unchanged */
+@media (max-width: 968px) {
+  .landing-nav,
+  .hero-content,
+  .section-content {
+    padding: 0 24px;
+  }
 }
