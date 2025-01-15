@@ -1,0 +1,142 @@
+.app-header {
+  background: white;
+  border-bottom: 1px solid var(--border-color);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+  height: 45px;
+}
+
+.header-content {
+  height: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 1rem;
+}
+
+.header-content h1 {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+/* Profile Dropdown Styles */
+.profile-dropdown {
+  position: relative;
+  margin-right: 1rem;
+}
+
+.profile-trigger {
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-variant);
+}
+
+.profile-trigger:hover {
+  background: var(--surface-variant-hover);
+}
+
+.profile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-initials {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  width: 180px;
+  border: 1px solid var(--border-color);
+}
+
+.dropdown-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.dropdown-profile-image {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.dropdown-profile-initials {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--surface-variant);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.dropdown-user-info {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.dropdown-user-info h3 {
+  font-size: 0.813rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.dropdown-user-info p {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin: 0.125rem 0 0;
+}
+
+.dropdown-logout-btn {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  color: var(--text-primary);
+  font-size: 0.813rem;
+  transition: background 0.2s ease;
+}
+
+.dropdown-logout-btn:hover {
+  background: var(--surface-variant);
+}
+
+.dropdown-logout-btn svg {
+  font-size: 0.875rem;
+}
+
+@media (max-width: 768px) {
+  .profile-dropdown {
+    margin-right: 0.5rem;
+  }
+} 

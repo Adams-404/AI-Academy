@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
-import gsuGdgLogo from '../../assets/gsu-gdg-logo.svg'
+import gsuGdgLogo from '../../assets/footer-logo.svg'
 import './Navigation.css'
 
 const DesktopNav = ({ onToggle }) => {

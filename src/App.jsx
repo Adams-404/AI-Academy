@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate, Navigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import DesktopNav from './components/navigation/DesktopNav'
@@ -9,25 +9,41 @@ import Courses from './pages/Courses'
 import WeekOneMaterials from './pages/WeekOneMaterials'
 import Projects from './pages/Projects'
 import Events from './pages/Events'
-import Profile from './pages/Profile'
 import Landing from './pages/Landing'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
+import Leaderboard from './pages/Leaderboard'
 import './App.css'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 import PrivateRoute from './components/auth/PrivateRoute'
 
 function App() {
   const [isNavExpanded, setIsNavExpanded] = useState(true)
+  const [isLoading, setIsLoading] = useState(true)
   const location = useLocation()
   const { currentUser } = useAuth()
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (currentUser && location.pathname === '/') {
-      navigate('/home')
+    if (currentUser) {
+      setTimeout(() => {
+        setIsLoading(false)
+      }, 100)
+      
+      if (location.pathname === '/') {
+        navigate('/home')
+      }
+    } else {
+      if (!['/login', '/signup', '/'].includes(location.pathname)) {
+        navigate('/login')
+      }
+      setIsLoading(false)
     }
-  }, [currentUser, location])
+  }, [currentUser, location, navigate])
+
+  if (isLoading) {
+    return null
+  }
 
   return (
     <div className="app">
@@ -49,9 +65,15 @@ function App() {
           >
             <div className="page-transition">
               <Routes location={location}>
-                <Route path="/" element={<Landing />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<Signup />} />
+                <Route path="/" element={
+                  currentUser ? <Navigate to="/home" /> : <Landing />
+                } />
+                <Route path="/login" element={
+                  currentUser ? <Navigate to="/home" /> : <Login />
+                } />
+                <Route path="/signup" element={
+                  currentUser ? <Navigate to="/home" /> : <Signup />
+                } />
                 <Route path="/home" element={
                   <PrivateRoute>
                     <Home />
@@ -77,9 +99,9 @@ function App() {
                     <Events />
                   </PrivateRoute>
                 } />
-                <Route path="/profile" element={
+                <Route path="/leaderboard" element={
                   <PrivateRoute>
-                    <Profile />
+                    <Leaderboard />
                   </PrivateRoute>
                 } />
               </Routes>
