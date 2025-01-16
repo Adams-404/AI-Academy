@@ -411,6 +411,7 @@
     border-radius: 50%;
     animation: pulse 2s infinite;
   }
+}
 
 /* Completely hide info section on mobile */
 @media (max-width: 1023px) {
