@@ -23,11 +23,11 @@ const Signup = () => {
   const [isDeleting, setIsDeleting] = useState(false)
 
   const phrases = [
-    "Learn to Code with Industry Experts",
-    "Build Real-World Projects",
-    "Join a Community of Developers",
-    "Grow Your Technical Skills",
-    "Connect with Tech Leaders"
+    "Learn with Industry Experts...",
+    "Build Real-World Projects.",
+    "Join AI Community Now!",
+    "Grow Your Technical Skills.",
+    "Connect with Tech Leaders."
   ]
 
   useEffect(() => {
@@ -146,11 +146,11 @@ const Signup = () => {
             <FaPython />
             <span>Python</span>
           </div>
-          <div className="float-card google-green" style={{ top: '35%', right: '10%' }}>
+          <div className="float-card google-green" style={{ top: '73%', right: '0%' }}>
             <FaNetworkWired />
             <span>Deep Learning</span>
           </div>
-          <div className="float-card google-yellow" style={{ bottom: '30%', right: '20%' }}>
+          <div className="float-card google-yellow" style={{ bottom: '48%', right: '0%', left: '60%' }}>
             <FaComments />
             <span>Prompt Engineering</span>
           </div>

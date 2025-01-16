@@ -1,7 +1,11 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
-import { FaGoogle, FaCode, FaUsers, FaLaptopCode } from 'react-icons/fa'
+import { 
+  FaGoogle, FaCode, FaUsers, FaLaptopCode,
+  FaBrain, FaRobot, FaPython, FaNetworkWired, 
+  FaComments, FaMicrochip, FaDatabase 
+} from 'react-icons/fa'
 import footerLogo from '../assets/footer-logo.svg'
 import './Auth.css'
 
@@ -19,11 +23,11 @@ const Login = () => {
   const [isDeleting, setIsDeleting] = useState(false)
 
   const phrases = [
-    "Welcome Back Developer",
-    "Continue Your Learning Journey",
-    "Access Your Projects",
-    "Connect With Your Community",
-    "Resume Your Progress"
+    "Welcome Back AI Enthusiast...",
+    "Continue Your Learning Journey.",
+    "Access Your Projects.",
+    "Connect With Your Community.",
+    "Resume Your Progress!"
   ]
 
   useEffect(() => {
@@ -101,6 +105,51 @@ const Login = () => {
               <circle cx="300" cy="200" r="10"/>
             </g>
           </svg>
+        </div>
+
+        <div className="floating-elements">
+          <div className="float-card google-blue" style={{ top: '15%', right: '25%' }}>
+            <FaBrain />
+            <span>AI Learning</span>
+          </div>
+          <div className="float-card google-red" style={{ bottom: '90%', left: '24%', right: '30%' }}>
+            <FaRobot />
+            <span>ML Models</span>
+          </div>
+          <div className="float-card" style={{ top: '5%', left: '70%' }}>
+            <FaPython />
+            <span>Python</span>
+          </div>
+          <div className="float-card google-green" style={{ top: '73%', right: '0%' }}>
+            <FaNetworkWired />
+            <span>Deep Learning</span>
+          </div>
+          <div className="float-card google-yellow" style={{ bottom: '48%', right: '0%', left: '60%' }}>
+            <FaComments />
+            <span>Prompt Engineering</span>
+          </div>
+          <div className="float-card" style={{ top: '92%', left: '20%' }}>
+            <FaMicrochip />
+            <span>Neural Networks</span>
+          </div>
+          <div className="float-card google-blue" style={{ bottom: '10%', right: '0%', top: '83%' }}>
+            <FaDatabase />
+            <span>TensorFlow</span>
+          </div>
+        </div>
+
+        <div className="neural-nodes">
+          {[...Array(5)].map((_, i) => (
+            <div 
+              key={i} 
+              className="node" 
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 2}s`
+              }}
+            />
+          ))}
         </div>
 
         {/* Neural network animation nodes */}
