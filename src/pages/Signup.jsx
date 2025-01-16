@@ -138,11 +138,11 @@ const Signup = () => {
             <FaBrain />
             <span>AI Learning</span>
           </div>
-          <div className="float-card google-red" style={{ bottom: '25%', left: '15%' }}>
+          <div className="float-card google-red" style={{ bottom: '90%', left: '24%', right: '30%' }}>
             <FaRobot />
             <span>ML Models</span>
           </div>
-          <div className="float-card" style={{ top: '20%', left: '10%' }}>
+          <div className="float-card" style={{ top: '5%', left: '70%' }}>
             <FaPython />
             <span>Python</span>
           </div>
@@ -154,11 +154,11 @@ const Signup = () => {
             <FaComments />
             <span>Prompt Engineering</span>
           </div>
-          <div className="float-card" style={{ top: '90%', left: '20%' }}>
+          <div className="float-card" style={{ top: '92%', left: '20%' }}>
             <FaMicrochip />
             <span>Neural Networks</span>
           </div>
-          <div className="float-card google-blue" style={{ bottom: '15%', right: '0%' }}>
+          <div className="float-card google-blue" style={{ bottom: '10%', right: '0%', top: '83%' }}>
             <FaDatabase />
             <span>TensorFlow</span>
           </div>
