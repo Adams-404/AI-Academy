@@ -57,16 +57,17 @@ function App() {
   }
 
   return (
-    <div className="app">
+    <div className={`app ${isPublicRoute ? 'public-route' : ''}`}>
       {currentUser && !isPublicRoute && (
         <>
           <DesktopNav onToggle={handleNavToggle} isExpanded={isNavExpanded} />
           <MobileNav />
         </>
       )}
-      <ScrollToTop />
       
-      <main className={`main-content ${isPublicRoute ? 'public-route' : ''} ${!isPublicRoute && isNavExpanded ? 'nav-expanded' : 'nav-collapsed'}`}>
+      {!isPublicRoute && <ScrollToTop />}
+      
+      <main className={isPublicRoute ? '' : `main-content ${isNavExpanded ? 'nav-expanded' : 'nav-collapsed'}`}>
         <Routes location={location}>
           <Route path="/" element={
             currentUser ? <Navigate to="/home" replace /> : <Landing />
