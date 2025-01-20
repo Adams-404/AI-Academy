@@ -1,17 +1,21 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
-import { FaGoogle, FaCode, FaUsers, FaLaptopCode, FaBrain, FaRobot, FaPython, FaNetworkWired, FaComments, FaMicrochip, FaDatabase } from 'react-icons/fa'
+import { FaGoogle, FaCode, FaUsers, FaLaptopCode, FaBrain, FaRobot, FaPython, FaNetworkWired, FaComments, FaMicrochip, FaDatabase, FaCamera } from 'react-icons/fa'
 import footerLogo from '../assets/footer-logo.svg'
 import './Auth.css'
+import { v4 as uuidv4 } from 'uuid'
 
 const Signup = () => {
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    avatar: null
   })
+  const [avatarPreview, setAvatarPreview] = useState(null)
+  const [passwordStrength, setPasswordStrength] = useState(0)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [loading, setLoading] = useState(false)
@@ -21,6 +25,8 @@ const Signup = () => {
   const [currentText, setCurrentText] = useState('')
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isDeleting, setIsDeleting] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState(0)
+  const [isUploading, setIsUploading] = useState(false)
 
   const phrases = [
     "Learn with Industry Experts...",
@@ -57,35 +63,144 @@ const Signup = () => {
     return () => clearTimeout(timeout)
   }, [currentText, isDeleting, currentIndex])
 
+  const handleAvatarChange = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      // Reset any previous errors
+      setError('')
+      
+      // Validate file size and type
+      const fileSize = file.size / 1024 / 1024 // in MB
+      const fileType = file.type
+      const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg']
+
+      if (fileSize > 2) {
+        setError('Avatar image must be less than 2MB')
+        return
+      }
+
+      if (!validTypes.includes(fileType)) {
+        setError('Please upload a valid image file (JPG, PNG, or GIF)')
+        return
+      }
+
+      // If validation passes, update form data and preview
+      setFormData(prev => ({ ...prev, avatar: file }))
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setAvatarPreview(reader.result)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const checkPasswordStrength = (password) => {
+    let strength = 0
+    if (password.length >= 8) strength += 1
+    if (/[A-Z]/.test(password)) strength += 1
+    if (/[0-9]/.test(password)) strength += 1
+    if (/[^A-Za-z0-9]/.test(password)) strength += 1
+    setPasswordStrength(strength)
+  }
+
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormData(prev => ({
       ...prev,
       [name]: value
     }))
+    if (name === 'password') {
+      checkPasswordStrength(value)
+    }
   }
 
   async function handleSubmit(e) {
     e.preventDefault()
     
+    // 1. Validation
     if (formData.password !== formData.confirmPassword) {
       return setError('Passwords do not match')
+    }
+
+    // 2. Avatar validation
+    if (formData.avatar) {
+      const fileSize = formData.avatar.size / 1024 / 1024 // in MB
+      const fileType = formData.avatar.type
+      const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg']
+
+      if (fileSize > 2) {
+        return setError('Avatar image must be less than 2MB')
+      }
+
+      if (!validTypes.includes(fileType)) {
+        return setError('Please upload a valid image file (JPG, PNG, or GIF)')
+      }
     }
 
     try {
       setError('')
       setLoading(true)
-      await signup(formData.email, formData.password, {
+      
+      const { data: { user }, error: signUpError } = await signup(formData.email, formData.password, {
         fullName: formData.fullName
       })
-      setSuccess('Account created successfully! Redirecting...')
-      // Wait for 1.5 seconds before redirecting
+
+      if (signUpError) throw signUpError
+
+      if (formData.avatar) {
+        try {
+          setIsUploading(true)
+          setUploadProgress(0)
+          
+          const fileExt = formData.avatar.name.split('.').pop()
+          const fileName = `${user.id}/${uuidv4()}.${fileExt}`
+          
+          // Upload with progress tracking
+          const { error: uploadError } = await supabase.storage
+            .from('avatars')
+            .upload(fileName, formData.avatar, {
+              cacheControl: '3600',
+              upsert: false,
+              onUploadProgress: (progress) => {
+                const percent = (progress.loaded / progress.total) * 100
+                setUploadProgress(Math.round(percent))
+              }
+            })
+
+          if (uploadError) throw uploadError
+
+          // Get the public URL
+          const { data: { publicUrl } } = supabase.storage
+            .from('avatars')
+            .getPublicUrl(fileName)
+
+          // Update user profile with avatar URL
+          const { error: updateError } = await supabase
+            .from('profiles')
+            .update({ avatar_url: publicUrl })
+            .eq('id', user.id)
+
+          if (updateError) {
+            throw new Error('Failed to update profile with avatar. Please try again.')
+          }
+
+        } catch (avatarError) {
+          console.error('Avatar upload error:', avatarError)
+          setError(`Account created but avatar upload failed: ${avatarError.message}`)
+        } finally {
+          setIsUploading(false)
+        }
+      }
+
+      // 5. Success handling
+      setSuccess('Account created successfully! Please check your email.')
       setTimeout(() => {
-        navigate('/home')
-      }, 1500)
+        navigate('/login')
+      }, 2000)
+
     } catch (error) {
-      setError('Failed to create an account: ' + error.message)
-      console.error(error)
+      setError(error.message || 'Failed to create an account')
+      console.error('Signup error:', error)
     } finally {
       setLoading(false)
     }
@@ -219,6 +334,37 @@ const Signup = () => {
         {success && <div className="success-message">{success}</div>}
 
         <form onSubmit={handleSubmit} className="auth-form">
+          <div className="avatar-upload">
+            <div className="avatar-preview" onClick={() => document.getElementById('avatar-input').click()}>
+              {avatarPreview ? (
+                <>
+                  <img src={avatarPreview} alt="Profile preview" />
+                  {isUploading && (
+                    <div className="upload-overlay">
+                      <div className="progress-container">
+                        <div 
+                          className="progress-bar" 
+                          style={{ width: `${uploadProgress}%` }} 
+                        />
+                        <span>{uploadProgress}%</span>
+                      </div>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <FaCamera className="camera-icon" />
+              )}
+            </div>
+            <input
+              type="file"
+              id="avatar-input"
+              accept="image/*"
+              onChange={handleAvatarChange}
+              style={{ display: 'none' }}
+            />
+            <p>{isUploading ? 'Uploading...' : 'Add profile picture'}</p>
+          </div>
+
           <div className="form-group">
             <label htmlFor="fullName">Full Name</label>
             <input
@@ -256,6 +402,26 @@ const Signup = () => {
               required
               disabled={loading}
             />
+            <div className="password-strength">
+              <div className={`strength-bar ${passwordStrength >= 1 ? 'active' : ''}`}></div>
+              <div className={`strength-bar ${passwordStrength >= 2 ? 'active' : ''}`}></div>
+              <div className={`strength-bar ${passwordStrength >= 3 ? 'active' : ''}`}></div>
+              <div className={`strength-bar ${passwordStrength >= 4 ? 'active' : ''}`}></div>
+            </div>
+            <div className="password-requirements">
+              <div className={`requirement ${formData.password.length >= 8 ? 'met' : ''}`}>
+                At least 8 characters
+              </div>
+              <div className={`requirement ${/[A-Z]/.test(formData.password) ? 'met' : ''}`}>
+                At least 1 uppercase letter
+              </div>
+              <div className={`requirement ${/[0-9]/.test(formData.password) ? 'met' : ''}`}>
+                At least 1 number
+              </div>
+              <div className={`requirement ${/[^A-Za-z0-9]/.test(formData.password) ? 'met' : ''}`}>
+                At least 1 special character
+              </div>
+            </div>
           </div>
 
           <div className="form-group">

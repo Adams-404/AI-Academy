@@ -17,6 +17,17 @@
   --text-primary: #202124;
   --text-secondary: #5f6368;
   --border-color: #e1e3e6;
+
+  /* Layout */
+  --header-height: 50px;
+  --nav-width: 250px;
+  
+  /* Colors */
+  --primary-blue: #4285f4;
+  
+  /* Other variables you might need */
+  --error-bg: #fce8e6;
+  --error-color: #d93025;
 }
 
 a {

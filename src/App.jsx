@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate, Navigate } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import DesktopNav from './components/navigation/DesktopNav'
 import MobileNav from './components/navigation/MobileNav'
@@ -8,108 +8,176 @@ import Courses from './pages/Courses'
 import WeekOneMaterials from './pages/WeekOneMaterials'
 import Projects from './pages/Projects'
 import Events from './pages/Events'
+import Profile from './pages/Profile'
 import Landing from './pages/Landing'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
 import Leaderboard from './pages/Leaderboard'
-import './App.css'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
-import PrivateRoute from './components/auth/PrivateRoute'
+import VerifyEmail from './pages/VerifyEmail'
+import { supabase } from './config/supabase'
+import './App.css'
 
 function App() {
   const [isNavExpanded, setIsNavExpanded] = useState(() => {
     const savedState = localStorage.getItem('navState')
     return savedState ? JSON.parse(savedState) : true
   })
-  const [isLoading, setIsLoading] = useState(true)
+  
+  const { user, loading } = useAuth()
   const location = useLocation()
-  const { currentUser } = useAuth()
+  const isPublicRoute = ['/', '/login', '/signup'].includes(location.pathname)
   const navigate = useNavigate()
 
-  const isPublicRoute = ['/', '/login', '/signup'].includes(location.pathname)
-
+  // Save nav state to localStorage
   useEffect(() => {
     if (!isPublicRoute) {
       localStorage.setItem('navState', JSON.stringify(isNavExpanded))
     }
   }, [isNavExpanded, isPublicRoute])
 
-  const handleNavToggle = (state) => {
-    setIsNavExpanded(state)
+  // Add console logs to debug
+  useEffect(() => {
+    console.log('Current user:', user)
+  }, [user])
+
+  // Modified auth state change handler
+  useEffect(() => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log('Auth event:', event)
+      console.log('Session:', session)
+      
+      if (event === 'SIGNED_IN') {
+        // Only navigate to home if we're on a public route
+        if (isPublicRoute) {
+          navigate('/home')
+        }
+      } else if (event === 'SIGNED_OUT') {
+        navigate('/login')
+      }
+    })
+
+    // Save the last visited route if user is authenticated
+    if (user && !isPublicRoute) {
+      localStorage.setItem('lastRoute', location.pathname)
+    }
+
+    return () => subscription.unsubscribe()
+  }, [navigate, user, isPublicRoute, location])
+
+  // Restore last route on initial load
+  useEffect(() => {
+    if (user && !loading) {
+      const lastRoute = localStorage.getItem('lastRoute')
+      if (lastRoute && isPublicRoute) {
+        navigate(lastRoute)
+      }
+    }
+  }, [user, loading, navigate, isPublicRoute])
+
+  if (loading) {
+    return <LoadingScreen />
   }
 
-  useEffect(() => {
-    if (currentUser) {
-      setIsLoading(false)
-      if (location.pathname === '/') {
-        navigate('/home', { replace: true })
-      }
-    } else {
-      if (!['/login', '/signup', '/'].includes(location.pathname)) {
-        navigate('/login', { replace: true })
-      }
-      setIsLoading(false)
+  // Protected Route component
+  const ProtectedRoute = ({ children }) => {
+    if (!user) {
+      return <Navigate to="/login" />
     }
-  }, [currentUser, location.pathname, navigate])
-
-  if (isLoading) {
-    return null
+    return children
   }
 
   return (
     <div className={`app ${isPublicRoute ? 'public-route' : ''}`}>
-      {currentUser && !isPublicRoute && (
+      {/* Show navigation only when user is authenticated and not on public routes */}
+      {user && !isPublicRoute && (
         <>
-          <DesktopNav onToggle={handleNavToggle} isExpanded={isNavExpanded} />
+          <DesktopNav onToggle={(state) => setIsNavExpanded(state)} isExpanded={isNavExpanded} />
           <MobileNav />
         </>
       )}
       
-      {!isPublicRoute && <ScrollToTop />}
+      {/* ScrollToTop component to reset scroll position */}
+      <ScrollToTop />
       
       <main className={isPublicRoute ? '' : `main-content ${isNavExpanded ? 'nav-expanded' : 'nav-collapsed'}`}>
-        <Routes location={location}>
-          <Route path="/" element={
-            currentUser ? <Navigate to="/home" replace /> : <Landing />
-          } />
-          <Route path="/login" element={
-            currentUser ? <Navigate to="/home" replace /> : <Login />
-          } />
-          <Route path="/signup" element={
-            currentUser ? <Navigate to="/home" replace /> : <Signup />
-          } />
+        <Routes>
+          {/* Public routes */}
+          <Route path="/" element={user ? <Navigate to="/home" /> : <Landing />} />
+          <Route path="/login" element={user ? <Navigate to="/home" /> : <Login />} />
+          <Route path="/signup" element={user ? <Navigate to="/home" /> : <Signup />} />
+          
+          {/* Protected routes */}
           <Route path="/home" element={
-            <PrivateRoute>
+            <ProtectedRoute>
               <Home />
-            </PrivateRoute>
+            </ProtectedRoute>
           } />
-          <Route path="/courses" element={
-            <PrivateRoute>
-              <Courses />
-            </PrivateRoute>
+          <Route path="/profile" element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
           } />
-          <Route path="/WeekOneMaterials" element={
-            <PrivateRoute>
-              <WeekOneMaterials />
-            </PrivateRoute>
-          } />
-          <Route path="/projects" element={
-            <PrivateRoute>
-              <Projects />
-            </PrivateRoute>
-          } />
-          <Route path="/events" element={
-            <PrivateRoute>
-              <Events />
-            </PrivateRoute>
-          } />
-          <Route path="/leaderboard" element={
-            <PrivateRoute>
-              <Leaderboard />
-            </PrivateRoute>
-          } />
+          <Route 
+            path="/courses" 
+            element={
+              <ProtectedRoute>
+                <Courses />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/WeekOneMaterials" 
+            element={
+              <ProtectedRoute>
+                <WeekOneMaterials />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/projects" 
+            element={
+              <ProtectedRoute>
+                <Projects />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/events" 
+            element={
+              <ProtectedRoute>
+                <Events />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/leaderboard" 
+            element={
+              <ProtectedRoute>
+                <Leaderboard />
+              </ProtectedRoute>
+            } 
+          />
+
+          {/* Auth callback route */}
+          <Route path="/auth/callback" element={<Navigate to="/home" replace />} />
+
+          {/* Catch all route */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+
+          <Route path="/auth/verify" element={<VerifyEmail />} />
         </Routes>
       </main>
+    </div>
+  )
+}
+
+function LoadingScreen() {
+  return (
+    <div className="loading-screen">
+      <div className="loading-spinner"></div>
     </div>
   )
 }

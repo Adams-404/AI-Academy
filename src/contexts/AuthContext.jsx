@@ -1,89 +1,162 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { 
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged,
-  GoogleAuthProvider,
-  signInWithPopup
-} from 'firebase/auth';
-import { auth } from '../config/firebase';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
-import { db } from '../config/firebase';
+import { supabase } from '../config/supabase';
 
-const AuthContext = createContext();
-
-export function useAuth() {
-  return useContext(AuthContext);
-}
+const AuthContext = createContext({});
 
 export function AuthProvider({ children }) {
-  const [currentUser, setCurrentUser] = useState(null);
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  async function createUserProfile(user, additionalData) {
+  useEffect(() => {
+    // Check active sessions
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+      setLoading(false);
+    });
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+      setLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  async function signup(email, password, metadata) {
     try {
-      const userRef = doc(db, 'users', user.uid)
-      console.log('Creating user profile with data:', additionalData) // Debug log
-      
-      const userData = {
-        fullName: additionalData.fullName,
-        email: user.email,
-        createdAt: new Date().toISOString(),
-        lastLogin: new Date().toISOString(),
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: metadata,
+          emailRedirectTo: `${window.location.origin}/auth/callback`
+        }
+      });
+
+      if (error) throw error;
+
+      // Create profile entry
+      if (data.user) {
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .insert([
+            {
+              id: data.user.id,
+              full_name: metadata.fullName,
+              avatar_url: null
+            }
+          ]);
+
+        if (profileError) throw profileError;
       }
 
-      await setDoc(userRef, userData)
-      return userData
+      return {
+        data,
+        error: null,
+        message: 'Please check your email for the verification link.'
+      };
     } catch (error) {
-      console.error('Error creating user profile:', error)
+      console.error('Signup error:', error);
+      return { data: null, error };
+    }
+  }
+
+  async function login(email, password) {
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if (error) {
+        if (error.message.includes('Email not confirmed')) {
+          throw new Error('Please verify your email before signing in. Check your inbox for the verification link.');
+        }
+        throw error;
+      }
+
+      return { data, error: null };
+    } catch (error) {
+      console.error('Login error:', error);
+      return { data: null, error };
+    }
+  }
+
+  async function signInWithGoogle() {
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          }
+        }
+      });
+      
+      console.log('Google sign-in response:', data);
+      
+      if (error) throw error;
+      return { data, error: null };
+    } catch (error) {
+      console.error('Google sign in error:', error);
+      return { data: null, error };
+    }
+  }
+
+  async function logout() {
+    try {
+      const { error } = await supabase.auth.signOut()
+      if (error) throw error
+      
+      // Clear any local storage items if needed
+      localStorage.removeItem('navState')
+      
+      // Optional: Clear any other auth-related state
+      setUser(null)
+    } catch (error) {
+      console.error('Error signing out:', error)
       throw error
     }
   }
 
-  async function signup(email, password, additionalData) {
+  async function resendVerificationEmail(email) {
     try {
-      const { user } = await createUserWithEmailAndPassword(auth, email, password);
-      await createUserProfile(user, additionalData);
-      return user;
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email: email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback`
+        }
+      })
+
+      if (error) throw error
+      return { error: null, message: 'Verification email resent successfully!' }
     } catch (error) {
-      throw error;
+      console.error('Error resending verification:', error)
+      return { error, message: null }
     }
   }
 
-  function login(email, password) {
-    return signInWithEmailAndPassword(auth, email, password);
-  }
-
-  function logout() {
-    return signOut(auth);
-  }
-
-  function signInWithGoogle() {
-    const provider = new GoogleAuthProvider();
-    return signInWithPopup(auth, provider);
-  }
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user);
-      setLoading(false);
-    });
-
-    return unsubscribe;
-  }, []);
-
   const value = {
-    currentUser,
+    user,
+    loading,
     signup,
     login,
     logout,
-    signInWithGoogle
+    signInWithGoogle,
+    resendVerificationEmail
   };
 
   return (
     <AuthContext.Provider value={value}>
-      {!loading && children}
+      {children}
     </AuthContext.Provider>
   );
+}
+
+export function useAuth() {
+  return useContext(AuthContext);
 } 

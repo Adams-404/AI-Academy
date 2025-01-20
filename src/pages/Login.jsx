@@ -59,24 +59,42 @@ const Login = () => {
     try {
       setError('')
       setLoading(true)
-      await login(email, password)
-      navigate('/home')
+      const { data, error } = await login(email, password)
+      
+      if (error) {
+        if (error.message.includes('Email not confirmed')) {
+          setError('Please verify your email before signing in. Check your inbox for the verification link.')
+        } else if (error.message.includes('Invalid login credentials')) {
+          setError('Invalid email or password.')
+        } else {
+          setError(error.message)
+        }
+        return
+      }
+
+      if (data?.user) {
+        navigate('/home', { replace: true })
+      }
     } catch (error) {
-      setError('Failed to sign in. Please check your credentials.')
+      setError(error.message || 'Failed to sign in')
+      console.error('Login error:', error)
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
   }
 
   async function handleGoogleSignIn() {
     try {
       setError('')
       setLoading(true)
-      await signInWithGoogle()
-      navigate('/home')
+      const { error } = await signInWithGoogle()
+      if (error) throw error
+      // Google OAuth will handle the redirect
     } catch (error) {
-      setError('Failed to sign in with Google.')
+      setError('Failed to sign in with Google')
+      console.error('Google sign in error:', error.message)
+      setLoading(false)
     }
-    setLoading(false)
   }
 
   return (
