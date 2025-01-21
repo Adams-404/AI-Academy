@@ -1,3 +1,6 @@
+/* Import Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600&display=swap');
+
 .app-header {
   background: rgba(255, 255, 255, 0.8); /* Transparent background */
   backdrop-filter: blur(8px); /* Blur effect for better readability */
@@ -17,27 +20,36 @@
   justify-content: space-between;
   align-items: center;
   padding: 0 24px;
+  transform: translateY(10px); /* Shift content down slightly without changing header height */
 }
 
 .header-greeting {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 8px;
+}
+
+.greeting-icon {
+  width: 18px;
+  height: 18px;
+  color: var(--text-secondary);
+  opacity: 0.8;
 }
 
 .header-greeting h1 {
   font-size: 1.1rem;
   font-weight: 500;
   color: var(--text-secondary);
+  opacity: 0.8;
 }
 
 .header-greeting h2 {
   font-size: 1.2rem;
   font-weight: 600;
-  color: var(--text-primary);
   background: linear-gradient(135deg, var(--primary-blue) 0%, #2563eb 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
 
 .profile-section {
@@ -107,40 +119,72 @@
   .app-header {
     left: 0;
     width: 100%;
+    height: 48px;
+    position: fixed;
+    top: 0;
   }
 
   .header-content {
-    padding: 0 16px;
+    width: 100%;
+    height: 100%;
     display: flex;
-    flex-direction: row;
-  }
-
-  .profile-section {
-    order: 2;
-    width: 40px;
-    height: 40px;
-    margin-left: auto;
-    border-width: 1.5px;
+    align-items: center;
+    padding: 0 16px;
+    transform: translateY(2px); /* Add slight downward shift */
   }
 
   .header-greeting {
-    order: 1;
-    margin-right: 12px;
+    flex: 1;
+    display: flex;
     align-items: center;
+    gap: 4px;
+  }
+
+  .profile-section {
+    width: 28px;
+    height: 28px;
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(calc(-50% + 2px)); /* Adjust vertical centering to match content */
+    border-radius: 50%;
+    border-width: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .greeting-icon {
+    width: 16px;
+    height: 16px;
   }
 
   .header-greeting h1 {
-    font-size: 0.9rem;
+    font-size: 14px;
+    line-height: 20px;
     white-space: nowrap;
+    margin: 0;
+    font-weight: 400;
   }
 
   .header-greeting h2 {
-    font-size: 1rem;
+    font-size: 14px;
+    line-height: 20px;
     white-space: nowrap;
+    margin: 0;
+    font-weight: 500;
   }
 
   .profile-initials {
-    font-size: 1rem;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .profile-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
   }
 }
 
@@ -150,36 +194,9 @@
     padding: 0 12px;
   }
 
-  .header-greeting {
-    flex-direction: row;
-    align-items: center;
-    gap: 4px;
-  }
-
-  .header-greeting h1 {
-    font-size: 0.85rem;
-  }
-
-  .header-greeting h2 {
-    font-size: 0.9rem;
-  }
-
   .profile-section {
-    width: 36px;
-    height: 36px;
-  }
-
-  .profile-initials {
-    font-size: 0.95rem;
-  }
-}
-
-/* Extra small mobile styles */
-@media (max-width: 360px) {
-  .header-greeting {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0;
+    width: 28px;  /* Keep consistent size */
+    height: 28px;
   }
 
   .header-greeting h1 {
@@ -188,6 +205,22 @@
 
   .header-greeting h2 {
     font-size: 0.85rem;
+  }
+}
+
+/* iPhone SE and similar */
+@media (max-width: 375px) {
+  .header-content {
+    padding: 0 10px;
+  }
+
+  .profile-section {
+    width: 28px;
+    height: 28px;
+  }
+
+  .profile-initials {
+    font-size: 0.75rem;
   }
 }
 
@@ -296,4 +329,48 @@
   .profile-dropdown {
     margin-right: 0.5rem;
   }
+}
+
+/* Add these styles to your existing CSS */
+.greeting-text {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.greeting-text h1 {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.styled-name {
+  font-family: 'Caveat', cursive;
+  font-size: 1.2rem; /* Slightly larger for the new font */
+  font-weight: 600;
+  background: linear-gradient(135deg, var(--primary-blue) 0%, #2563eb 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  margin-left: -2px; /* Remove extra space before name */
+}
+
+.cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.2em;
+  background-color: currentColor;
+  margin-left: 1px;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.greeting-text h1 {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
 }
