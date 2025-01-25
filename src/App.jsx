@@ -29,6 +29,10 @@ function App() {
   const isPublicRoute = ['/', '/login', '/signup'].includes(location.pathname)
   const navigate = useNavigate()
 
+  // Add state to track current route
+  const hideNavOnRoutes = ['/WeekOneMaterials']
+  const shouldHideMobileNav = hideNavOnRoutes.includes(location.pathname)
+
   // Save nav state to localStorage
   useEffect(() => {
     if (!isPublicRoute) {
@@ -95,7 +99,7 @@ function App() {
       {user && !isPublicRoute && (
         <>
           <DesktopNav onToggle={(state) => setIsNavExpanded(state)} isExpanded={isNavExpanded} />
-          <MobileNav />
+          {!shouldHideMobileNav && <MobileNav />}
         </>
       )}
       
@@ -103,72 +107,74 @@ function App() {
       <ScrollToTop />
       
       <main className={isPublicRoute ? '' : `main-content ${isNavExpanded ? 'nav-expanded' : 'nav-collapsed'}`}>
-        <Routes>
-          {/* Public routes */}
-          <Route path="/" element={user ? <Navigate to="/home" /> : <Landing />} />
-          <Route path="/login" element={user ? <Navigate to="/home" /> : <Login />} />
-          <Route path="/signup" element={user ? <Navigate to="/home" /> : <Signup />} />
-          
-          {/* Protected routes */}
-          <Route path="/home" element={
-            <ProtectedRoute>
-              <Home />
-            </ProtectedRoute>
-          } />
-          <Route path="/profile" element={
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>
-          } />
-          <Route 
-            path="/courses" 
-            element={
+        <div className="content-wrapper">
+          <Routes>
+            {/* Public routes */}
+            <Route path="/" element={user ? <Navigate to="/home" /> : <Landing />} />
+            <Route path="/login" element={user ? <Navigate to="/home" /> : <Login />} />
+            <Route path="/signup" element={user ? <Navigate to="/home" /> : <Signup />} />
+            
+            {/* Protected routes */}
+            <Route path="/home" element={
               <ProtectedRoute>
-                <Courses />
+                <Home />
               </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/WeekOneMaterials" 
-            element={
+            } />
+            <Route path="/profile" element={
               <ProtectedRoute>
-                <WeekOneMaterials />
+                <Profile />
               </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/projects" 
-            element={
-              <ProtectedRoute>
-                <Projects />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/events" 
-            element={
-              <ProtectedRoute>
-                <Events />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/leaderboard" 
-            element={
-              <ProtectedRoute>
-                <Leaderboard />
-              </ProtectedRoute>
-            } 
-          />
+            } />
+            <Route 
+              path="/courses" 
+              element={
+                <ProtectedRoute>
+                  <Courses />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/WeekOneMaterials" 
+              element={
+                <ProtectedRoute>
+                  <WeekOneMaterials />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/projects" 
+              element={
+                <ProtectedRoute>
+                  <Projects />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/events" 
+              element={
+                <ProtectedRoute>
+                  <Events />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/leaderboard" 
+              element={
+                <ProtectedRoute>
+                  <Leaderboard />
+                </ProtectedRoute>
+              } 
+            />
 
-          {/* Auth callback route */}
-          <Route path="/auth/callback" element={<Navigate to="/home" replace />} />
+            {/* Auth callback route */}
+            <Route path="/auth/callback" element={<Navigate to="/home" replace />} />
 
-          {/* Catch all route */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+            {/* Catch all route */}
+            <Route path="*" element={<Navigate to="/" replace />} />
 
-          <Route path="/auth/verify" element={<VerifyEmail />} />
-        </Routes>
+            <Route path="/auth/verify" element={<VerifyEmail />} />
+          </Routes>
+        </div>
       </main>
     </div>
   )

@@ -38,15 +38,32 @@ body {
   display: flex;
   min-height: 100vh;
   background: var(--background-light);
+  position: relative;
+  overflow-x: hidden;
   width: 100%;
 }
 
+/* Main content area */
 .main-content {
   flex: 1;
-  position: relative;
-  background: var(--background-light);
-  min-height: 100vh;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  margin-left: var(--nav-width);
   transition: margin-left 0.3s ease;
+  position: relative;
+}
+
+.main-content.nav-collapsed {
+  margin-left: var(--nav-width-collapsed);
+}
+
+/* Add this new class */
+.content-wrapper {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  position: relative;
 }
 
 /* Public routes */

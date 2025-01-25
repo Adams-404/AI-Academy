@@ -14,31 +14,28 @@ body {
 
 .profile-container {
   margin: 0;
-  padding: 0;
-  width: 100%;
+  width: 100vw;
   height: calc(100vh - var(--header-height));
   background-color: var(--surface);
-  position: fixed;
-  top: var(--header-height);
-  left: 0;
-  overflow-y: auto;
   display: flex;
-  justify-content: center;
+  padding: 24px;
+  overflow: hidden;
 }
 
 .profile-card {
-  width: 100%;
-  max-width: 600px;
-  height: 100%;
+  flex: 1;
   background-color: var(--surface);
-  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0 24px;
 }
 
 .profile-content {
-  height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  flex: 1;
+  width: 100%;
 }
 
 .profile-header {
@@ -46,6 +43,7 @@ body {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
+  width: 100%;
 }
 
 .profile-header h1 {
@@ -85,25 +83,27 @@ body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 24px;
+  width: 100%;
 }
 
 .info-group {
-  margin-bottom: 16px;
+  width: 100%;
 }
 
 .info-group label {
   font-size: 14px;
   color: var(--text-secondary);
-  margin-bottom: 4px;
+  margin-bottom: 8px;
   display: block;
 }
 
 .info-group p {
   font-size: 16px;
   color: var(--text-primary);
-  padding: 8px 0;
+  padding: 12px 0;
   border-bottom: 1px solid var(--border-color, #eee);
+  width: 100%;
 }
 
 .edit-button {
@@ -143,7 +143,6 @@ body {
 }
 
 .logout-button {
-  margin-top: auto;
   width: 100%;
   padding: 12px;
   background: transparent;
@@ -160,6 +159,7 @@ body {
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  margin-top: 24px;
 }
 
 .logout-button::before {
@@ -197,39 +197,60 @@ body {
   transform: translateX(3px);
 }
 
-/* Mobile-specific adjustments */
+/* Mobile styles */
 @media screen and (max-width: 768px) {
-  .profile-card {
+  .profile-container {
     padding: 16px;
   }
 
+  .profile-card {
+    padding: 0 16px;
+  }
+
   .profile-avatar {
-    width: 88px;
-    height: 88px;
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 20px;
   }
 
-  .profile-header h1 {
-    font-size: 20px;
+  .profile-info {
+    gap: 20px;
   }
 
-  .edit-button {
-    padding: 8px 16px;
-    font-size: 13px;
+  .info-group label {
+    margin-bottom: 6px;
   }
 
-  .logout-button {
-    padding: 10px;
-    font-size: 13px;
+  .info-group p {
+    padding: 10px 0;
   }
 }
 
 @media screen and (max-width: 480px) {
-  .profile-card {
+  .profile-container {
     padding: 12px;
   }
 
-  .profile-header h1 {
-    font-size: 18px;
+  .profile-card {
+    padding: 0 12px;
+  }
+
+  .profile-avatar {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 16px;
+  }
+
+  .profile-info {
+    gap: 16px;
+  }
+
+  .info-group label {
+    margin-bottom: 4px;
+  }
+
+  .info-group p {
+    padding: 8px 0;
   }
 }
 
