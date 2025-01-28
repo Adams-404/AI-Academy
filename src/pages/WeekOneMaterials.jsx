@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import {
   FaArrowLeft,
@@ -19,14 +19,19 @@ import {
   FaUser,
 } from "react-icons/fa"
 import "./WeekOneMaterials.css"
+import { supabase } from '../config/supabase'
+import { useAuth } from "../contexts/AuthContext" // Assuming you have AuthContext
 
 const WeekOneMaterials = () => {
-  const [activeSection, setActiveSection] = useState("introduction")
+  const { user } = useAuth(); // Get current user from auth context
+  
+  const [activeSection, setActiveSection] = useState("introduction");
+  
   const [progress, setProgress] = useState({
     introduction: false,
     concepts: false,
     applications: false,
-  })
+  });
 
   const [showMaterials, setShowMaterials] = useState(false)
 
@@ -142,18 +147,187 @@ const WeekOneMaterials = () => {
 
   const sectionOrder = ["introduction", "concepts", "applications"]
 
-  const handleNavigation = (direction) => {
-    const currentIndex = sectionOrder.indexOf(activeSection)
-    const nextIndex = direction === "next" ? currentIndex + 1 : currentIndex - 1
-    const nextSection = sectionOrder[nextIndex]
-    setActiveSection(nextSection)
+  const handleNavigation = async (direction) => {
+    const currentIndex = sectionOrder.indexOf(activeSection);
+    const nextIndex = direction === "next" ? currentIndex + 1 : currentIndex - 1;
+    const nextSection = sectionOrder[nextIndex];
     
-    // Add this: Scroll to top when changing topics
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    })
-  }
+    if (direction === "next") {
+      // Update local state immediately for better UX
+      const updatedProgress = {
+        ...progress,
+        [activeSection]: true // Mark current section as complete
+      };
+      
+      // If this is the last section, mark it complete too
+      if (nextIndex === sectionOrder.length - 1) {
+        updatedProgress[nextSection] = true;
+      }
+      
+      console.log('Saving updated progress:', updatedProgress, 'Next section:', nextSection);
+      
+      // Update local state
+      setProgress(updatedProgress);
+      setActiveSection(nextSection);
+      
+      // Scroll to top immediately
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+
+      // Save to Supabase
+      try {
+        // First try to get the existing record
+        const { data: existingData } = await supabase
+          .from('course_progress')
+          .select('id')
+          .eq('user_id', user.id)
+          .eq('course_id', 'week_one')
+          .single();
+
+        const updateData = {
+          user_id: user.id,
+          course_id: 'week_one',
+          module_id: 'week_one_module',
+          progress: updatedProgress,
+          active_section: nextSection,
+          last_position: nextSection,
+          completed: nextIndex === sectionOrder.length - 1, // Mark as completed if on last section
+          updated_at: new Date().toISOString()
+        };
+
+        let result;
+        
+        if (existingData?.id) {
+          // Update existing record
+          result = await supabase
+            .from('course_progress')
+            .update(updateData)
+            .eq('id', existingData.id)
+            .select();
+        } else {
+          // Insert new record
+          result = await supabase
+            .from('course_progress')
+            .insert(updateData)
+            .select();
+        }
+
+        const { error } = result;
+        if (error) throw error;
+
+        console.log('Saved to Supabase:', result.data);
+
+        // Update localStorage
+        localStorage.setItem('courseProgress', JSON.stringify(updatedProgress));
+        localStorage.setItem('activeSection', nextSection);
+      } catch (error) {
+        console.error('Error saving progress:', error);
+      }
+    } else {
+      setActiveSection(nextSection);
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  const fetchProgress = async () => {
+    if (!user) return;
+
+    try {
+      console.log('Fetching progress for user:', user.id);
+      
+      const { data, error } = await supabase
+        .from('course_progress')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('course_id', 'week_one')
+        .single();
+
+      console.log('Raw fetched data:', data);
+
+      if (error) {
+        if (error.code === 'PGRST116') {
+          // Create initial record
+          const initialProgress = {
+            introduction: false,
+            concepts: false,
+            applications: false,
+          };
+
+          const { data: newData, error: insertError } = await supabase
+            .from('course_progress')
+            .insert({
+              user_id: user.id,
+              course_id: 'week_one',
+              module_id: 'week_one_module',
+              progress: initialProgress,
+              active_section: 'introduction',
+              last_position: 'introduction',
+              completed: false,
+              updated_at: new Date().toISOString()
+            })
+            .select()
+            .single();
+
+          if (insertError) throw insertError;
+          
+          console.log('Created initial progress:', newData);
+          data = newData;
+        } else {
+          throw error;
+        }
+      }
+
+      if (data) {
+        // Ensure progress has all required fields
+        const currentProgress = data.progress || {
+          introduction: false,
+          concepts: false,
+          applications: false,
+        };
+
+        const currentSection = data.last_position || data.active_section || 'introduction';
+        
+        console.log('Setting states:', {
+          progress: currentProgress,
+          activeSection: currentSection
+        });
+
+        setProgress(currentProgress);
+        setActiveSection(currentSection);
+        
+        localStorage.setItem('courseProgress', JSON.stringify(currentProgress));
+        localStorage.setItem('activeSection', currentSection);
+      }
+    } catch (error) {
+      console.error('Error in fetchProgress:', error);
+      // Fall back to localStorage if available
+      const savedProgress = localStorage.getItem('courseProgress');
+      const savedSection = localStorage.getItem('activeSection');
+      if (savedProgress) {
+        setProgress(JSON.parse(savedProgress));
+      }
+      if (savedSection) {
+        setActiveSection(savedSection);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (user) {
+      fetchProgress();
+    }
+  }, [user]);
+
+  // Add this to help debug the current state
+  useEffect(() => {
+    console.log('Current progress state:', progress);
+    console.log('Current active section:', activeSection);
+  }, [progress, activeSection]);
 
   const isFirstSection = sectionOrder.indexOf(activeSection) === 0
   const isLastSection = sectionOrder.indexOf(activeSection) === sectionOrder.length - 1
@@ -163,8 +337,40 @@ const WeekOneMaterials = () => {
   const progressPercentage = completedSections / totalSections
 
   const handleComplete = () => {
-    setShowMaterials(true)
-  }
+    const updatedProgress = {
+      ...progress,
+      [activeSection]: true
+    };
+    setProgress(updatedProgress);
+    localStorage.setItem('courseProgress', JSON.stringify(updatedProgress));
+    setShowMaterials(true);
+  };
+
+  const resetProgress = async () => {
+    const initialProgress = {
+      introduction: false,
+      concepts: false,
+      applications: false,
+    };
+    setProgress(initialProgress);
+    setActiveSection("introduction");
+    localStorage.setItem('courseProgress', JSON.stringify(initialProgress));
+    localStorage.setItem('activeSection', "introduction");
+  };
+
+  // Add this helper function to calculate progress percentage
+  const calculateProgress = (progressObj) => {
+    if (!progressObj) return 0;
+    const totalSections = sectionOrder.length;
+    const completedSections = Object.values(progressObj).filter(Boolean).length;
+    return Math.round((completedSections / totalSections) * 100);
+  };
+
+  // Add this useEffect to log progress percentage
+  useEffect(() => {
+    const progressPercentage = calculateProgress(progress);
+    console.log('Current progress percentage:', progressPercentage + '%');
+  }, [progress]);
 
   return (
     <div className="materials-container">
