@@ -283,18 +283,27 @@ const WeekOneMaterials = () => {
       }
 
       if (data) {
-        // Ensure progress has all required fields
-        const currentProgress = data.progress || {
+        // Ensure we have all sections in the progress object
+        const currentProgress = {
           introduction: false,
           concepts: false,
           applications: false,
+          ...data.progress // This will override the defaults with saved values
         };
+
+        // If the course was completed, ensure all sections are marked as complete
+        if (data.completed) {
+          sectionOrder.forEach(section => {
+            currentProgress[section] = true;
+          });
+        }
 
         const currentSection = data.last_position || data.active_section || 'introduction';
         
-        console.log('Setting states:', {
+        console.log('Restoring states:', {
           progress: currentProgress,
-          activeSection: currentSection
+          activeSection: currentSection,
+          completed: data.completed
         });
 
         setProgress(currentProgress);
@@ -302,6 +311,10 @@ const WeekOneMaterials = () => {
         
         localStorage.setItem('courseProgress', JSON.stringify(currentProgress));
         localStorage.setItem('activeSection', currentSection);
+
+        // Log the calculated progress
+        const progressPercentage = calculateProgress(currentProgress);
+        console.log('Restored progress percentage:', progressPercentage + '%');
       }
     } catch (error) {
       console.error('Error in fetchProgress:', error);
@@ -309,7 +322,12 @@ const WeekOneMaterials = () => {
       const savedProgress = localStorage.getItem('courseProgress');
       const savedSection = localStorage.getItem('activeSection');
       if (savedProgress) {
-        setProgress(JSON.parse(savedProgress));
+        const parsedProgress = JSON.parse(savedProgress);
+        setProgress(parsedProgress);
+        console.log('Restored from localStorage:', {
+          progress: parsedProgress,
+          percentage: calculateProgress(parsedProgress) + '%'
+        });
       }
       if (savedSection) {
         setActiveSection(savedSection);
@@ -317,17 +335,27 @@ const WeekOneMaterials = () => {
     }
   };
 
+  // Make sure calculateProgress is defined
+  const calculateProgress = (progressObj) => {
+    if (!progressObj) return 0;
+    const totalSections = sectionOrder.length;
+    const completedSections = Object.values(progressObj).filter(Boolean).length;
+    return Math.round((completedSections / totalSections) * 100);
+  };
+
+  // Add this effect to monitor progress changes
+  useEffect(() => {
+    const progressPercentage = calculateProgress(progress);
+    console.log('Current progress state:', progress);
+    console.log('Progress percentage:', progressPercentage + '%');
+  }, [progress]);
+
+  // Make sure we fetch progress when component mounts
   useEffect(() => {
     if (user) {
       fetchProgress();
     }
   }, [user]);
-
-  // Add this to help debug the current state
-  useEffect(() => {
-    console.log('Current progress state:', progress);
-    console.log('Current active section:', activeSection);
-  }, [progress, activeSection]);
 
   const isFirstSection = sectionOrder.indexOf(activeSection) === 0
   const isLastSection = sectionOrder.indexOf(activeSection) === sectionOrder.length - 1
@@ -357,20 +385,6 @@ const WeekOneMaterials = () => {
     localStorage.setItem('courseProgress', JSON.stringify(initialProgress));
     localStorage.setItem('activeSection', "introduction");
   };
-
-  // Add this helper function to calculate progress percentage
-  const calculateProgress = (progressObj) => {
-    if (!progressObj) return 0;
-    const totalSections = sectionOrder.length;
-    const completedSections = Object.values(progressObj).filter(Boolean).length;
-    return Math.round((completedSections / totalSections) * 100);
-  };
-
-  // Add this useEffect to log progress percentage
-  useEffect(() => {
-    const progressPercentage = calculateProgress(progress);
-    console.log('Current progress percentage:', progressPercentage + '%');
-  }, [progress]);
 
   return (
     <div className="materials-container">
