@@ -10,7 +10,7 @@ const DesktopNav = ({ onToggle, isExpanded }) => {
 
   const navItems = [
     { 
-      to: '/', 
+      to: '/home', 
       icon: 'cottage',
       label: 'Home'
     },
@@ -20,9 +20,9 @@ const DesktopNav = ({ onToggle, isExpanded }) => {
       label: 'Courses'
     },
     { 
-      to: '/projects', 
-      icon: 'code',
-      label: 'Projects'
+      to: '/blog', 
+      icon: 'article',
+      label: 'Blog'
     },
     { 
       to: '/events', 
@@ -62,6 +62,7 @@ const DesktopNav = ({ onToggle, isExpanded }) => {
             key={to}
             to={to}
             className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+            end
           >
             <span className="material-symbols-rounded">{icon}</span>
             <div className="nav-link-content">

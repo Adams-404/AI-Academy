@@ -3,9 +3,9 @@ import './Navigation.css'
 
 const MobileNav = () => {
   const navItems = [
-    { to: '/', icon: 'home', label: 'Home' },
+    { to: '/home', icon: 'home', label: 'Home' },
     { to: '/courses', icon: 'school', label: 'Courses' },
-    { to: '/projects', icon: 'terminal', label: 'Projects' },
+    { to: '/blog', icon: 'article', label: 'Blog' },
     { to: '/events', icon: 'calendar_month', label: 'Events' },
     { to: '/profile', icon: 'person', label: 'Profile' }
   ]
@@ -17,6 +17,7 @@ const MobileNav = () => {
           key={to}
           to={to}
           className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+          end
         >
           <span className="material-symbols-rounded">{icon}</span>
           <span className="nav-label">{label}</span>

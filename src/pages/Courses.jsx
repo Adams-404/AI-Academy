@@ -432,7 +432,7 @@ const Courses = () => {
                 {week.assignment && (
                   <button 
                     className={`button ${canAccessAssignment ? 'button-secondary' : 'button-disabled'}`}
-                    onClick={() => canAccessAssignment && navigate(`/assignment/week${week.week}`)}
+                    onClick={() => canAccessAssignment && navigate(`/weekly-assignment/${week.week}`)}
                     title={!canAccessAssignment ? "Complete all materials to unlock assignment" : ""}
                   >
                     <FaGraduationCap /> Start Assignment

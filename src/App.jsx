@@ -6,7 +6,10 @@ import ScrollToTop from './components/layout/ScrollToTop'
 import Home from './pages/Home'
 import Courses from './pages/Courses'
 import WeekOneMaterials from './pages/WeekOneMaterials'
-import Projects from './pages/Projects'
+import WeeklyAssignment from './pages/WeeklyAssignment'
+import Blog from './pages/Blog'
+import WriteArticle from './pages/WriteArticle'
+import ArticleView from './pages/ArticleView'
 import Events from './pages/Events'
 import Profile from './pages/Profile'
 import Landing from './pages/Landing'
@@ -26,12 +29,12 @@ function App() {
   
   const { user, loading } = useAuth()
   const location = useLocation()
-  const isPublicRoute = ['/', '/login', '/signup'].includes(location.pathname)
   const navigate = useNavigate()
+  const isPublicRoute = ['/', '/login', '/signup'].includes(location.pathname)
 
   // Add state to track current route
-  const hideNavOnRoutes = ['/WeekOneMaterials']
-  const shouldHideMobileNav = hideNavOnRoutes.includes(location.pathname)
+  const hideNavOnRoutes = ['/WeekOneMaterials', '/weekly-assignment']
+  const shouldHideMobileNav = hideNavOnRoutes.some(route => location.pathname.startsWith(route))
 
   // Save nav state to localStorage
   useEffect(() => {
@@ -40,46 +43,55 @@ function App() {
     }
   }, [isNavExpanded, isPublicRoute])
 
-  // Add console logs to debug
+  // Modified auth state change handler with debounce
   useEffect(() => {
-    console.log('Current user:', user)
-  }, [user])
-
-  // Modified auth state change handler
-  useEffect(() => {
+    let timeoutId;
+    
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
-      console.log('Auth event:', event)
-      console.log('Session:', session)
+      if (timeoutId) clearTimeout(timeoutId);
       
-      if (event === 'SIGNED_IN') {
-        // Only navigate to home if we're on a public route
-        if (isPublicRoute) {
-          navigate('/home')
+      timeoutId = setTimeout(() => {
+        if (event === 'SIGNED_IN') {
+          // Only navigate to home if we're on a public route
+          if (isPublicRoute) {
+            navigate('/home', { replace: true })
+          }
+        } else if (event === 'SIGNED_OUT') {
+          navigate('/login', { replace: true })
         }
-      } else if (event === 'SIGNED_OUT') {
-        navigate('/login')
-      }
+      }, 100);
     })
 
-    // Save the last visited route if user is authenticated
-    if (user && !isPublicRoute) {
-      localStorage.setItem('lastRoute', location.pathname)
+    return () => {
+      subscription.unsubscribe()
+      if (timeoutId) clearTimeout(timeoutId)
     }
+  }, [navigate, isPublicRoute])
 
-    return () => subscription.unsubscribe()
-  }, [navigate, user, isPublicRoute, location])
-
-  // Restore last route on initial load
+  // Restore last route on initial load with debounce
   useEffect(() => {
-    if (user && !loading) {
-      const lastRoute = localStorage.getItem('lastRoute')
-      if (lastRoute && isPublicRoute) {
-        navigate(lastRoute)
-      }
+    if (!loading) {
+      const timeoutId = setTimeout(() => {
+        if (user) {
+          const lastRoute = localStorage.getItem('lastRoute')
+          if (lastRoute && isPublicRoute) {
+            navigate(lastRoute, { replace: true })
+          }
+        }
+      }, 100)
+
+      return () => clearTimeout(timeoutId)
     }
   }, [user, loading, navigate, isPublicRoute])
+
+  // Save the current route
+  useEffect(() => {
+    if (user && !isPublicRoute && !loading) {
+      localStorage.setItem('lastRoute', location.pathname)
+    }
+  }, [location.pathname, user, isPublicRoute, loading])
 
   if (loading) {
     return <LoadingScreen />
@@ -88,7 +100,7 @@ function App() {
   // Protected Route component
   const ProtectedRoute = ({ children }) => {
     if (!user) {
-      return <Navigate to="/login" />
+      return <Navigate to="/login" replace />
     }
     return children
   }
@@ -110,9 +122,9 @@ function App() {
         <div className="content-wrapper">
           <Routes>
             {/* Public routes */}
-            <Route path="/" element={user ? <Navigate to="/home" /> : <Landing />} />
-            <Route path="/login" element={user ? <Navigate to="/home" /> : <Login />} />
-            <Route path="/signup" element={user ? <Navigate to="/home" /> : <Signup />} />
+            <Route path="/" element={user ? <Navigate to="/home" replace /> : <Landing />} />
+            <Route path="/login" element={user ? <Navigate to="/home" replace /> : <Login />} />
+            <Route path="/signup" element={user ? <Navigate to="/home" replace /> : <Signup />} />
             
             {/* Protected routes */}
             <Route path="/home" element={
@@ -142,10 +154,42 @@ function App() {
               } 
             />
             <Route 
-              path="/projects" 
+              path="/weekly-assignment/:weekId" 
               element={
                 <ProtectedRoute>
-                  <Projects />
+                  <WeeklyAssignment />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/blog" 
+              element={
+                <ProtectedRoute>
+                  <Blog />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/blog/write" 
+              element={
+                <ProtectedRoute>
+                  <WriteArticle />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/blog/:id" 
+              element={
+                <ProtectedRoute>
+                  <ArticleView />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/blog/edit/:id" 
+              element={
+                <ProtectedRoute>
+                  <WriteArticle isEditing={true} />
                 </ProtectedRoute>
               } 
             />

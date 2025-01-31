@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import {
   FaArrowLeft,
   FaBook,
@@ -24,6 +24,7 @@ import { useAuth } from "../contexts/AuthContext" // Assuming you have AuthConte
 
 const WeekOneMaterials = () => {
   const { user } = useAuth(); // Get current user from auth context
+  const navigate = useNavigate();
   
   const [activeSection, setActiveSection] = useState("introduction");
   
@@ -619,7 +620,12 @@ const WeekOneMaterials = () => {
                   <div className="material-content">
                     <h3>Weekly Assessment</h3>
                     <p className="material-meta">Quiz • 20 minutes</p>
-                    <button className="start-button">Start Quiz</button>
+                    <button 
+                      className="start-button"
+                      onClick={() => navigate('/weekly-assignment/1')}
+                    >
+                      Start Assignment
+                    </button>
                   </div>
                 </div>
               </div>

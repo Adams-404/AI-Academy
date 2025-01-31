@@ -2,7 +2,7 @@ import { NavLink } from 'react-router-dom'
 import { 
   MdOutlineHome,
   MdOutlineSchool,
-  MdOutlineCode,
+  MdOutlineArticle,
   MdOutlineCalendarToday,
   MdOutlinePerson
 } from 'react-icons/md'
@@ -21,9 +21,9 @@ const Navigation = () => {
       label: 'Courses'
     },
     {
-      path: '/projects',
-      icon: <MdOutlineCode size={22} />,
-      label: 'Projects'
+      path: '/blog',
+      icon: <MdOutlineArticle size={22} />,
+      label: 'Blog'
     },
     {
       path: '/events',
