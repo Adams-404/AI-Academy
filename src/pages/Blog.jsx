@@ -1,234 +1,230 @@
-import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { supabase } from '../config/supabase.js'
-import { 
-  FaPlus,
-  FaUser,
-  FaClock,
-  FaEdit,
-  FaTrash 
-} from 'react-icons/fa'
-import '../utils/draftjs-polyfill'
-import { convertFromRaw } from 'draft-js'
+import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import { FaPen, FaHeart, FaRegHeart, FaEdit, FaTrash } from 'react-icons/fa'
+import { useAuth } from '../contexts/AuthContext'
+import { supabase } from '../config/supabase'
 import './Blog.css'
 
-const DEFAULT_THUMBNAIL = 'https://images.unsplash.com/photo-1677442136019-21780ecad995' // Add a default AI-related image URL
-
 const Blog = () => {
-  const [posts, setPosts] = useState([])
+  const [articles, setArticles] = useState([])
   const [loading, setLoading] = useState(true)
-  const [currentUser, setCurrentUser] = useState(null)
-  const navigate = useNavigate()
+  const [error, setError] = useState(null)
+  const { user } = useAuth()
 
   useEffect(() => {
-    fetchPosts()
-    fetchCurrentUser()
+    fetchArticles()
   }, [])
 
-  const fetchCurrentUser = async () => {
-    const { data: { user } } = await supabase.auth.getUser()
-    setCurrentUser(user)
-  }
-
-  const fetchPosts = async () => {
+  const fetchArticles = async () => {
     try {
-      const { data, error } = await supabase
-        .from('articles')
-        .select('*')
-        .order('created_at', { ascending: false })
+      setLoading(true)
+      setError(null)
 
-      if (error) throw error
-      setPosts(data || [])
+      // First get the articles
+      const { data: articles, error: articlesError } = await supabase
+        .from('articles')
+        .select(`
+          *,
+          article_likes (count)
+        `)
+        .eq('status', 'published')
+        .order('published_at', { ascending: false })
+
+      if (articlesError) throw articlesError
+
+      // Then get the profiles for the authors
+      if (articles && articles.length > 0) {
+        const authorIds = [...new Set(articles.map(article => article.author_id))]
+        const { data: profiles, error: profilesError } = await supabase
+          .from('profiles')
+          .select('*')
+          .in('id', authorIds)
+
+        if (profilesError) throw profilesError
+
+        // Combine the data
+        const articlesWithAuthors = articles.map(article => ({
+          ...article,
+          profiles: profiles.find(profile => profile.id === article.author_id)
+        }))
+
+        // Check which articles are liked by the current user
+        if (user) {
+          const { data: likedArticles } = await supabase
+            .from('article_likes')
+            .select('article_id')
+            .eq('user_id', user.id)
+
+          const likedArticleIds = new Set(likedArticles?.map(like => like.article_id))
+          articlesWithAuthors.forEach(article => {
+            article.isLiked = likedArticleIds.has(article.id)
+          })
+        }
+
+        setArticles(articlesWithAuthors)
+      } else {
+        setArticles([])
+      }
     } catch (error) {
-      console.error('Error fetching posts:', error)
+      console.error('Error fetching articles:', error)
+      setError('Failed to load articles')
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleLike = async (articleId, isLiked) => {
+    if (!user) return
+
+    try {
+      if (isLiked) {
+        await supabase
+          .from('article_likes')
+          .delete()
+          .eq('article_id', articleId)
+          .eq('user_id', user.id)
+      } else {
+        await supabase
+          .from('article_likes')
+          .insert([{ article_id: articleId, user_id: user.id }])
+      }
+
+      // Update the articles state
+      setArticles(articles.map(article => {
+        if (article.id === articleId) {
+          const likesCount = article.article_likes[0]?.count || 0
+          return {
+            ...article,
+            isLiked: !isLiked,
+            article_likes: [{ count: isLiked ? likesCount - 1 : likesCount + 1 }]
+          }
+        }
+        return article
+      }))
+    } catch (error) {
+      console.error('Error handling like:', error)
     }
   }
 
   const handleDelete = async (articleId) => {
-    if (!window.confirm('Are you sure you want to delete this article?')) return
+    if (!user) return
+
+    if (!window.confirm('Are you sure you want to delete this article? This action cannot be undone.')) {
+      return
+    }
 
     try {
-      setLoading(true)
-      
-      // First, get the article to get its thumbnail URL and content
-      const { data: article, error: fetchError } = await supabase
-        .from('articles')
-        .select('*')
-        .eq('id', articleId)
-        .single()
-
-      if (fetchError) throw fetchError
-
-      // Check if user is the author
-      const { data: { user } } = await supabase.auth.getUser()
-      if (user.id !== article.author_id) {
-        throw new Error('You are not authorized to delete this article')
-      }
-
-      // Delete the article from the database
-      const { error: deleteError } = await supabase
+      await supabase
         .from('articles')
         .delete()
-        .match({ id: articleId, author_id: user.id })
+        .eq('id', articleId)
+        .eq('author_id', user.id)
 
-      if (deleteError) throw deleteError
-
-      // If there was a thumbnail, delete it from storage
-      if (article?.thumbnail_url) {
-        const thumbnailPath = article.thumbnail_url.split('/').pop() // Get filename from URL
-        const { error: storageError } = await supabase.storage
-          .from('articles')
-          .remove([`thumbnails/${thumbnailPath}`])
-        
-        if (storageError) {
-          console.error('Error deleting thumbnail:', storageError)
-        }
-      }
-
-      // Delete any images from the article content
-      if (article?.content) {
-        const contentState = convertFromRaw(article.content)
-        const blocks = contentState.getBlocksAsArray()
-        const imageBlocks = blocks.filter(block => block.getType() === 'atomic')
-        
-        for (const block of imageBlocks) {
-          const entityKey = block.getEntityAt(0)
-          if (entityKey) {
-            const entity = contentState.getEntity(entityKey)
-            if (entity.getType() === 'IMAGE') {
-              const { src } = entity.getData()
-              const imagePath = src.split('/').pop() // Get filename from URL
-              const { error: storageError } = await supabase.storage
-                .from('articles')
-                .remove([`article-images/${imagePath}`])
-              
-              if (storageError) {
-                console.error('Error deleting article image:', storageError)
-              }
-            }
-          }
-        }
-      }
-
-      // Fetch fresh data instead of just updating local state
-      await fetchPosts()
-      
-      alert('Article deleted successfully!')
+      // Update the articles state
+      setArticles(articles.filter(article => article.id !== articleId))
     } catch (error) {
       console.error('Error deleting article:', error)
-      alert('Failed to delete article: ' + error.message)
-    } finally {
-      setLoading(false)
     }
   }
 
-  const renderArticleCard = (article) => {
-    const isAuthor = currentUser?.id === article.author_id
+  if (loading) {
+    return <div className="blog-container">Loading articles...</div>
+  }
 
-    return (
-      <div key={article.id} className="article-card">
-        <div className="article-image" onClick={() => navigate(`/blog/${article.id}`)}>
-          {article.thumbnail_url ? (
-            <img 
-              src={article.thumbnail_url} 
-              alt={article.title}
-              onError={(e) => {
-                e.target.onerror = null
-                e.target.src = DEFAULT_THUMBNAIL
-              }}
-            />
-          ) : (
-            <div className="placeholder-image">
-              <FaPlus size={20} />
-            </div>
-          )}
-        </div>
-        <div className="article-content">
-          <h2 onClick={() => navigate(`/blog/${article.id}`)}>{article.title}</h2>
-          <p>{article.description}</p>
-          <div className="article-tags">
-            {article.tags?.map((tag, index) => (
-              <span key={index} className="tag">
-                {tag.startsWith('@') ? tag : `#${tag}`}
-              </span>
-            ))}
-          </div>
-          <div className="article-meta">
-            <span className="author">
-              <FaUser size={14} />
-              {article.author_name}
-            </span>
-            <span className="date">
-              <FaClock size={14} />
-              {new Date(article.created_at).toLocaleDateString()}
-            </span>
-          </div>
-          <div className="article-actions">
-            <button 
-              className="read-more"
-              onClick={() => navigate(`/blog/${article.id}`)}
-            >
-              Read More
-            </button>
-            {isAuthor && (
-              <div className="author-actions">
-                <button
-                  className="edit-button"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    navigate(`/blog/edit/${article.id}`)
-                  }}
-                  title="Edit article"
-                >
-                  <FaEdit size={20} />
-                </button>
-                <button
-                  className="delete-button"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    handleDelete(article.id)
-                  }}
-                  title="Delete article"
-                >
-                  <FaTrash size={20} />
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    )
+  if (error) {
+    return <div className="blog-container">Error: {error}</div>
   }
 
   return (
-    <div className="blog-page">
+    <div className="blog-container">
       <div className="blog-header">
-        <h1>AI Academy Blog</h1>
-        <p>
-          Stay updated with the latest in AI technology, tutorials, and insights from our
-          community. Explore in-depth articles, guides, and news about artificial intelligence.
-        </p>
-        <button 
-          className="write-article-button"
-          onClick={() => navigate('/blog/write')}
-        >
-          <FaPlus />
-          Write Article
-        </button>
+        <h1>Blog</h1>
+        <Link to="/write" className="write-button">
+          <FaPen /> Write Article
+        </Link>
       </div>
 
       <div className="articles-grid">
-        {loading ? (
-          <div className="loading">Loading articles...</div>
-        ) : posts.length === 0 ? (
-          <div className="no-articles">
-            <p>No articles yet. Be the first to write one!</p>
-          </div>
-        ) : (
-          posts.map(renderArticleCard)
-        )}
+        {articles.map(article => (
+          <article key={article.id} className="article-card">
+            {article.cover_image && (
+              <img 
+                src={article.cover_image} 
+                alt={article.title}
+                className="article-cover"
+              />
+            )}
+            <div className="article-content">
+              <h2>
+                <Link to={`/blog/${article.slug}`}>{article.title}</Link>
+              </h2>
+              <p className="article-excerpt">{article.excerpt}</p>
+              
+              {article.tags && article.tags.length > 0 && (
+                <div className="article-tags">
+                  {article.tags.map(tag => (
+                    <span key={tag} className="tag">#{tag}</span>
+                  ))}
+                </div>
+              )}
+
+              <div className="article-meta">
+                <div className="article-author">
+                  {article.profiles?.avatar_url ? (
+                    <img 
+                      src={article.profiles.avatar_url}
+                      alt={article.profiles.full_name}
+                      className="author-avatar"
+                    />
+                  ) : (
+                    <div className="author-initials">
+                      {article.profiles?.full_name?.[0]}
+                    </div>
+                  )}
+                  <div className="author-info">
+                    <span className="author-name">{article.profiles?.full_name}</span>
+                    <span className="publish-date">
+                      {new Date(article.published_at).toLocaleDateString()}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="article-stats">
+                  <button 
+                    className={`like-button ${article.isLiked ? 'liked' : ''}`}
+                    onClick={() => handleLike(article.id, article.isLiked)}
+                    disabled={!user}
+                    title={user ? (article.isLiked ? 'Unlike' : 'Like') : 'Login to like'}
+                  >
+                    {article.isLiked ? <FaHeart /> : <FaRegHeart />}
+                    <span className="like-count">
+                      {article.article_likes[0]?.count || 0}
+                    </span>
+                  </button>
+                  
+                  {user && user.id === article.author_id && (
+                    <div className="article-actions">
+                      <Link 
+                        to={`/blog/edit/${article.id}`}
+                        className="edit-button"
+                        title="Edit article"
+                      >
+                        <FaEdit size={18} />
+                      </Link>
+                      <button
+                        onClick={() => handleDelete(article.id)}
+                        className="delete-button"
+                        title="Delete article"
+                      >
+                        <FaTrash size={18} />
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </article>
+        ))}
       </div>
     </div>
   )

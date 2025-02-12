@@ -8,19 +8,22 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check active sessions
+    // Check current session first
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
-      setLoading(false);
+      setLoading(false); // Set loading to false after initial session check
     });
 
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    // Set up auth state listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log('Auth state changed:', event, session);
       setUser(session?.user ?? null);
       setLoading(false);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription?.unsubscribe();
+    };
   }, []);
 
   async function signup(email, password, metadata) {
@@ -29,8 +32,10 @@ export function AuthProvider({ children }) {
         email,
         password,
         options: {
-          data: metadata,
-          emailRedirectTo: `${window.location.origin}/auth/callback`
+          data: {
+            full_name: metadata.fullName,
+            avatar_url: metadata.avatar_url
+          }
         }
       });
 
@@ -44,18 +49,23 @@ export function AuthProvider({ children }) {
             {
               id: data.user.id,
               full_name: metadata.fullName,
-              avatar_url: null
+              avatar_url: metadata.avatar_url,
+              updated_at: new Date().toISOString()
             }
           ]);
 
         if (profileError) throw profileError;
+
+        // Manually sign in the user after signup
+        const { error: signInError } = await supabase.auth.signInWithPassword({
+          email,
+          password
+        });
+
+        if (signInError) throw signInError;
       }
 
-      return {
-        data,
-        error: null,
-        message: 'Please check your email for the verification link.'
-      };
+      return { data, error: null };
     } catch (error) {
       console.error('Signup error:', error);
       return { data: null, error };
@@ -88,17 +98,16 @@ export function AuthProvider({ children }) {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
           queryParams: {
             access_type: 'offline',
             prompt: 'consent',
-          }
+          },
+          redirectTo: `${window.location.origin}/auth/callback`
         }
       });
-      
-      console.log('Google sign-in response:', data);
-      
+
       if (error) throw error;
+      
       return { data, error: null };
     } catch (error) {
       console.error('Google sign in error:', error);
@@ -140,6 +149,49 @@ export function AuthProvider({ children }) {
     }
   }
 
+  async function updateProfile({ full_name, avatar_url }) {
+    try {
+      if (!user) throw new Error('No user')
+
+      // First update the auth metadata
+      const { error: metadataError } = await supabase.auth.updateUser({
+        data: {
+          full_name,
+          avatar_url
+        }
+      })
+
+      if (metadataError) throw metadataError
+
+      // Then update the profile
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .update({
+          full_name,
+          avatar_url,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', user.id)
+
+      if (profileError) throw profileError
+
+      // Update local user state to reflect changes
+      setUser(prev => ({
+        ...prev,
+        user_metadata: {
+          ...prev.user_metadata,
+          full_name,
+          avatar_url
+        }
+      }))
+
+      return { error: null }
+    } catch (error) {
+      console.error('Error updating profile:', error)
+      return { error }
+    }
+  }
+
   const value = {
     user,
     loading,
@@ -147,8 +199,14 @@ export function AuthProvider({ children }) {
     login,
     logout,
     signInWithGoogle,
-    resendVerificationEmail
+    resendVerificationEmail,
+    updateProfile
   };
+
+  // Don't render children until initial loading is complete
+  if (loading) {
+    return <div>Loading...</div>; // Or your loading component
+  }
 
   return (
     <AuthContext.Provider value={value}>

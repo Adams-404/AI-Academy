@@ -141,19 +141,16 @@ const Signup = () => {
       setError('')
       setLoading(true)
       
-      const { data: { user }, error: signUpError } = await signup(formData.email, formData.password, {
-        fullName: formData.fullName
-      })
+      let avatarUrl = null;
 
-      if (signUpError) throw signUpError
-
+      // Handle avatar upload first if there is one
       if (formData.avatar) {
         try {
           setIsUploading(true)
           setUploadProgress(0)
           
           const fileExt = formData.avatar.name.split('.').pop()
-          const fileName = `${user.id}/${uuidv4()}.${fileExt}`
+          const fileName = `avatars/${uuidv4()}.${fileExt}`
           
           // Upload with progress tracking
           const { error: uploadError } = await supabase.storage
@@ -174,28 +171,25 @@ const Signup = () => {
             .from('avatars')
             .getPublicUrl(fileName)
 
-          // Update user profile with avatar URL
-          const { error: updateError } = await supabase
-            .from('profiles')
-            .update({ avatar_url: publicUrl })
-            .eq('id', user.id)
-
-          if (updateError) {
-            throw new Error('Failed to update profile with avatar. Please try again.')
-          }
-
+          avatarUrl = publicUrl;
         } catch (avatarError) {
           console.error('Avatar upload error:', avatarError)
-          setError(`Account created but avatar upload failed: ${avatarError.message}`)
-        } finally {
-          setIsUploading(false)
+          throw avatarError
         }
       }
 
-      // 5. Success handling
-      setSuccess('Account created successfully! Please check your email.')
+      // Now proceed with signup
+      const { data, error: signUpError } = await signup(formData.email, formData.password, {
+        fullName: formData.fullName,
+        avatar_url: avatarUrl
+      })
+
+      if (signUpError) throw signUpError
+
+      // Success handling
+      setSuccess('Account created successfully!')
       setTimeout(() => {
-        navigate('/login')
+        navigate('/home')
       }, 2000)
 
     } catch (error) {
@@ -203,6 +197,7 @@ const Signup = () => {
       console.error('Signup error:', error)
     } finally {
       setLoading(false)
+      setIsUploading(false)
     }
   }
 

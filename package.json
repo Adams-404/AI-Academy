@@ -12,9 +12,18 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
+    "@draft-js-plugins/buttons": "^4.3.3",
+    "@draft-js-plugins/editor": "^4.1.4",
+    "@draft-js-plugins/image": "^4.1.4",
+    "@draft-js-plugins/inline-toolbar": "^4.2.1",
+    "@draft-js-plugins/linkify": "^4.2.2",
+    "@fontsource/material-symbols-rounded": "^5.1.4",
     "@ionic/react": "^8.4.1",
     "@material-symbols/font-400": "^0.27.2",
+    "@mdi/js": "^7.4.47",
+    "@mdi/react": "^1.6.1",
     "@supabase/supabase-js": "^2.47.16",
+    "@tinymce/tinymce-react": "^5.1.1",
     "draft-js": "^0.11.7",
     "firebase": "^11.1.0",
     "framer-motion": "^11.18.0",

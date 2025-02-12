@@ -3,7 +3,7 @@
   background-color: var(--background-default);
   overflow-x: hidden;
   position: relative;
-  width: 100%;  
+  width: 1500px;
 }
 
 /* Header & Navigation */
@@ -93,7 +93,7 @@
 
 /* Features Section */
 .features-section {
-  padding: 96px 0;
+  padding: 105px 0;
   background-color: var(--background-secondary);
   position: relative;
   overflow: hidden;
@@ -165,7 +165,7 @@
 }
 
 .cta-section .section-content {
-  max-width: 800px; /* Slightly narrower for better readability */
+  max-width: 800px;
 }
 
 .cta-section h2 {
@@ -313,7 +313,7 @@
 
 .top-right {
   top: 20px;
-  right: 140px;
+  right: -50px;
   width: 160px;
   height: 160px;
 }

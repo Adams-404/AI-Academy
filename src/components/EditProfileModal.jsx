@@ -40,11 +40,11 @@ export default function EditProfileModal({ isOpen, onClose, currentProfile, onPr
       // Create unique file name
       const fileExt = file.name.split('.').pop()
       const fileName = `${user.id}-${Math.random()}.${fileExt}`
-      const filePath = `${fileName}` // Remove 'avatars/' from the path
+      const filePath = `avatars/${fileName}`  // Add 'avatars/' to the path
 
       // Upload to Supabase Storage
       const { error: uploadError, data } = await supabase.storage
-        .from('avatars') // Make sure this matches exactly with your bucket name
+        .from('avatars')
         .upload(filePath, file, {
           cacheControl: '3600',
           upsert: true
@@ -76,24 +76,17 @@ export default function EditProfileModal({ isOpen, onClose, currentProfile, onPr
 
       if (!user) throw new Error('No user')
 
-      // First handle the file upload if there is one
-      let avatar_url = formData.avatar_url
-      if (formData.avatar_file) {
-        // ... file upload logic ...
+      const updates = {
+        id: user.id,
+        full_name: formData.full_name,
+        avatar_url: formData.avatar_url,
+        updated_at: new Date().toISOString()
       }
 
-      // Use upsert instead of insert/update
+      // Update profile in the database
       const { error: profileError } = await supabase
         .from('profiles')
-        .upsert({
-          id: user.id,
-          full_name: formData.full_name,
-          avatar_url: avatar_url,
-          updated_at: new Date().toISOString()
-        }, {
-          onConflict: 'id',
-          returning: 'minimal'
-        })
+        .upsert(updates)
 
       if (profileError) throw profileError
 
@@ -101,17 +94,13 @@ export default function EditProfileModal({ isOpen, onClose, currentProfile, onPr
       const { error: userError } = await supabase.auth.updateUser({
         data: {
           full_name: formData.full_name,
-          avatar_url: avatar_url
+          avatar_url: formData.avatar_url
         }
       })
 
       if (userError) throw userError
 
-      onProfileUpdate({
-        id: user.id,
-        full_name: formData.full_name,
-        avatar_url: avatar_url
-      })
+      onProfileUpdate(updates)
       
       setSuccess(true)
       setTimeout(() => {

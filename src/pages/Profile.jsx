@@ -2,18 +2,20 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../config/supabase'
-import { FaSignOutAlt, FaEdit } from 'react-icons/fa'
+import { FaSignOutAlt, FaPencilAlt } from 'react-icons/fa'
 import EditProfileModal from '../components/EditProfileModal'
 import './Profile.css'
 
 const Profile = () => {
-  const { user, logout } = useAuth()
+  const { user, logout, updateProfile } = useAuth()
   const [loading, setLoading] = useState(true)
   const [updating, setUpdating] = useState(false)
   const [profileData, setProfileData] = useState(null)
   const [error, setError] = useState(null)
   const navigate = useNavigate()
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [retryCount, setRetryCount] = useState(0)
+  const MAX_RETRIES = 3
 
   useEffect(() => {
     if (user) {
@@ -23,6 +25,11 @@ const Profile = () => {
 
   async function getProfile() {
     try {
+      if (retryCount >= MAX_RETRIES) {
+        setError('Unable to connect to the server. Please check your internet connection and try again later.')
+        return
+      }
+
       setLoading(true)
       setError(null)
       
@@ -55,35 +62,42 @@ const Profile = () => {
         }
       } else {
         setProfileData(data)
+        setRetryCount(0) // Reset retry count on success
       }
     } catch (error) {
       console.error('Error loading profile:', error)
       setError(error.message)
+      setRetryCount(prev => prev + 1)
+      
+      // If it's a connection error, try again after a delay
+      if (error.message.includes('Failed to fetch') && retryCount < MAX_RETRIES) {
+        setTimeout(() => {
+          getProfile()
+        }, 2000) // Wait 2 seconds before retrying
+      }
     } finally {
       setLoading(false)
     }
   }
 
-  async function updateProfile({ full_name, avatar_url }) {
+  async function handleProfileUpdate({ full_name, avatar_url }) {
     try {
       setUpdating(true)
       
       if (!user) throw new Error('No user')
 
-      const updates = {
-        id: user.id,
+      const { error } = await updateProfile({
         full_name,
-        avatar_url,
-        updated_at: new Date().toISOString(),
-      }
-
-      const { error } = await supabase
-        .from('profiles')
-        .upsert(updates)
+        avatar_url
+      })
 
       if (error) throw error
       
-      setProfileData(prev => ({ ...prev, ...updates }))
+      setProfileData(prev => ({ 
+        ...prev, 
+        full_name,
+        avatar_url 
+      }))
     } catch (error) {
       console.error('Error updating profile:', error)
       setError(error.message)
@@ -133,6 +147,28 @@ const Profile = () => {
     )
   }
 
+  if (error && retryCount >= MAX_RETRIES) {
+    return (
+      <div className="profile-container">
+        <div className="profile-card error-card">
+          <div className="error-content">
+            <h2>Connection Error</h2>
+            <p>{error}</p>
+            <button 
+              className="retry-button"
+              onClick={() => {
+                setRetryCount(0)
+                getProfile()
+              }}
+            >
+              Try Again
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="profile-container">
       <div className="profile-card">
@@ -143,15 +179,15 @@ const Profile = () => {
               className="edit-button"
               onClick={() => setIsEditModalOpen(true)}
             >
-              <FaEdit />
+              <FaPencilAlt size={16} />
               Edit Profile
             </button>
           </div>
 
           <div className="profile-avatar">
-            {user?.user_metadata?.avatar_url ? (
+            {(profileData?.avatar_url || user?.user_metadata?.avatar_url) ? (
               <img 
-                src={user.user_metadata.avatar_url} 
+                src={profileData?.avatar_url || user?.user_metadata?.avatar_url} 
                 alt="Profile" 
                 className="avatar-image"
               />
@@ -196,7 +232,7 @@ const Profile = () => {
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
         currentProfile={profileData}
-        onProfileUpdate={(updates) => setProfileData(updates)}
+        onProfileUpdate={handleProfileUpdate}
       />
     </div>
   )

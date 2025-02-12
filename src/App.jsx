@@ -16,6 +16,8 @@ import Landing from './pages/Landing'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
 import Leaderboard from './pages/Leaderboard'
+import CourseManagement from './pages/admin/CourseManagement'
+import ModuleEditor from './pages/admin/ModuleEditor'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 import VerifyEmail from './pages/VerifyEmail'
 import { supabase } from './config/supabase'
@@ -30,11 +32,19 @@ function App() {
   const { user, loading } = useAuth()
   const location = useLocation()
   const navigate = useNavigate()
-  const isPublicRoute = ['/', '/login', '/signup'].includes(location.pathname)
+  const isPublicRoute = location.pathname === '/' || 
+    location.pathname === '/login' || 
+    location.pathname === '/signup' || 
+    location.pathname === '/auth/verify'
 
-  // Add state to track current route
-  const hideNavOnRoutes = ['/WeekOneMaterials', '/weekly-assignment']
+  // Update the hideNavOnRoutes array to include the write page
+  const hideNavOnRoutes = ['/WeekOneMaterials', '/weekly-assignment', '/write', '/blog/edit']
   const shouldHideMobileNav = hideNavOnRoutes.some(route => location.pathname.startsWith(route))
+
+  // Add this new check for article view pages
+  const isArticleView = location.pathname.startsWith('/blog/') && 
+    location.pathname !== '/blog/edit/' && 
+    location.pathname !== '/blog'
 
   // Save nav state to localStorage
   useEffect(() => {
@@ -93,8 +103,9 @@ function App() {
     }
   }, [location.pathname, user, isPublicRoute, loading])
 
+  // Show loading screen while auth state is being determined
   if (loading) {
-    return <LoadingScreen />
+    return <LoadingScreen />;
   }
 
   // Protected Route component
@@ -105,13 +116,24 @@ function App() {
     return children
   }
 
+  // Admin Route component
+  const AdminRoute = ({ children }) => {
+    const { user } = useAuth();
+    const isAdmin = user?.user_metadata?.role === 'admin';
+    
+    if (!user || !isAdmin) {
+      return <Navigate to="/home" replace />;
+    }
+    return children;
+  };
+
   return (
     <div className={`app ${isPublicRoute ? 'public-route' : ''}`}>
       {/* Show navigation only when user is authenticated and not on public routes */}
       {user && !isPublicRoute && (
         <>
           <DesktopNav onToggle={(state) => setIsNavExpanded(state)} isExpanded={isNavExpanded} />
-          {!shouldHideMobileNav && <MobileNav />}
+          {!shouldHideMobileNav && !isArticleView && <MobileNav />}
         </>
       )}
       
@@ -170,18 +192,18 @@ function App() {
               } 
             />
             <Route 
-              path="/blog/write" 
+              path="/blog/:slug" 
               element={
                 <ProtectedRoute>
-                  <WriteArticle />
+                  <ArticleView />
                 </ProtectedRoute>
               } 
             />
             <Route 
-              path="/blog/:id" 
+              path="/write" 
               element={
                 <ProtectedRoute>
-                  <ArticleView />
+                  <WriteArticle />
                 </ProtectedRoute>
               } 
             />
@@ -207,6 +229,32 @@ function App() {
                 <ProtectedRoute>
                   <Leaderboard />
                 </ProtectedRoute>
+              } 
+            />
+
+            {/* Admin routes */}
+            <Route 
+              path="/admin/courses" 
+              element={
+                <AdminRoute>
+                  <CourseManagement />
+                </AdminRoute>
+              } 
+            />
+            <Route 
+              path="/admin/courses/module/:moduleId" 
+              element={
+                <AdminRoute>
+                  <ModuleEditor />
+                </AdminRoute>
+              } 
+            />
+            <Route 
+              path="/admin/courses/module/:moduleId/preview" 
+              element={
+                <AdminRoute>
+                  <WeekOneMaterials />
+                </AdminRoute>
               } 
             />
 
