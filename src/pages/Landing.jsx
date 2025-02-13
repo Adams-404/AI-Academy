@@ -16,8 +16,8 @@ const Landing = () => {
         </div>
         <nav className="landing-nav">
           <div className="logo-container">
-            <img src="/src/assets/footer-logo.svg" alt="GSU GDG Logo" className="landing-logo" />
-            <span className="logo-text">GDG on Campus GSU</span>
+            <img src="/src/assets/footer-logo.svg" alt="AI Academy Logo" className="landing-logo" />
+            <span className="logo-text">AI Academy</span>
           </div>
           <div className="nav-buttons">
             <Link to="/login" className="button button-text">Log in</Link>
@@ -31,7 +31,7 @@ const Landing = () => {
           </div>
           <div className="hero-text">
             <h1>Learn AI Development</h1>
-            <h2>with GDG on Campus GSU</h2>
+            <h2>with AI Academy</h2>
             <p className="hero-description">
               Join our community of learners and master artificial intelligence 
               through hands-on projects and expert guidance.
@@ -63,7 +63,7 @@ const Landing = () => {
           <CirclePattern />
         </div>
         <div className="section-content">
-          <h2 className="section-title">Why choose GDG on Campus GSU?</h2>
+          <h2 className="section-title">Why choose AI Academy?</h2>
           <div className="features-grid">
             {[
               {
@@ -116,10 +116,10 @@ const Landing = () => {
       <footer className="landing-footer">
         <div className="footer-content">
           <div className="footer-logo">
-            <img src="/src/assets/footer-logo.svg" alt="GDG Footer Logo" />
+            <img src="/src/assets/footer-logo.svg" alt="AI Academy Logo" />
           </div>
           <p className="footer-text">
-            © {new Date().getFullYear()} GDG on Campus GSU. All rights reserved.
+            © {new Date().getFullYear()} AI Academy. All rights reserved.
           </p>
         </div>
       </footer>

@@ -12,7 +12,8 @@ import {
   FaGraduationCap,
   FaBook,
   FaClipboardList,
-  FaBrain
+  FaBrain,
+  FaPen
 } from 'react-icons/fa';
 import './CourseManagement.css';
 
@@ -47,6 +48,10 @@ const CourseManagement = () => {
 
   const handleCreateModule = () => {
     navigate('/admin/courses/module/new');
+  };
+
+  const handleWriteArticle = () => {
+    navigate('/write', { replace: true });
   };
 
   const handleEditModule = (moduleId) => {
@@ -97,17 +102,33 @@ const CourseManagement = () => {
 
   return (
     <div className="course-management">
-      <header className="management-header">
-        <div className="header-content">
-          <div className="header-title">
-            <FaGraduationCap className="header-icon" />
-            <h1>Course Management</h1>
+      <div className="admin-cards">
+        <div className="admin-card course-card">
+          <div className="card-content">
+            <div className="card-title">
+              <FaGraduationCap className="card-icon" />
+              <h2>Course Management</h2>
+            </div>
+            <p className="card-description">Create and manage course modules, track progress, and organize your educational content.</p>
+            <button className="create-module-btn" onClick={handleCreateModule}>
+              <FaPlus /> Create New Module
+            </button>
           </div>
-          <button className="create-module-btn" onClick={handleCreateModule}>
-            <FaPlus /> Create New Module
-          </button>
         </div>
-      </header>
+
+        <div className="admin-card article-card">
+          <div className="card-content">
+            <div className="card-title">
+              <FaPen className="card-icon" />
+              <h2>Blog Management</h2>
+            </div>
+            <p className="card-description">Write and publish articles to share knowledge, updates, and announcements with your community.</p>
+            <button className="write-article-btn" onClick={handleWriteArticle}>
+              <FaPen /> Write Article
+            </button>
+          </div>
+        </div>
+      </div>
 
       {error && (
         <div className="error-message">

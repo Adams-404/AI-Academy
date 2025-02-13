@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../config/supabase'
-import { FaSignOutAlt, FaPencilAlt } from 'react-icons/fa'
+import { FaSignOutAlt } from 'react-icons/fa'
 import EditProfileModal from '../components/EditProfileModal'
 import './Profile.css'
 
@@ -179,7 +179,7 @@ const Profile = () => {
               className="edit-button"
               onClick={() => setIsEditModalOpen(true)}
             >
-              <FaPencilAlt size={16} />
+              <span className="material-symbols-rounded">edit</span>
               Edit Profile
             </button>
           </div>
@@ -214,6 +214,13 @@ const Profile = () => {
             <div className="info-group">
               <label>Member Since</label>
               <p>{new Date(user?.created_at).toLocaleDateString()}</p>
+            </div>
+
+            <div className="info-group">
+              <label>Role</label>
+              <p className={`role-badge ${user?.user_metadata?.role || 'student'}`}>
+                {user?.user_metadata?.role ? 'Admin' : 'Student'}
+              </p>
             </div>
           </div>
 

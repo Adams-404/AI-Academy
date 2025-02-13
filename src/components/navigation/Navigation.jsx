@@ -40,7 +40,7 @@ const Navigation = () => {
   return (
     <nav className="desktop-nav">
       <div className="nav-logo">
-        <img src="/footer-logo.svg" alt="GDG" />
+        <img src="/footer-logo.svg" alt="AI Academy" />
         <span>AI Academy</span>
       </div>
       <div className="nav-links">

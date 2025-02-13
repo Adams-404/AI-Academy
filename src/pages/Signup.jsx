@@ -296,7 +296,7 @@ const Signup = () => {
             AI Academy
           </div>
           
-          <h2 className="auth-info-title">Welcome to GDG GSU</h2>
+          <h2 className="auth-info-title">Welcome to AI Academy</h2>
           <div className="typewriter-text">
             {currentText}
             <span className="cursor">|</span>
@@ -320,9 +320,9 @@ const Signup = () => {
 
       <div className="auth-content">
         <div className="auth-header">
-          <img src={footerLogo} alt="GDG Logo" className="gdg-logo" />
+          <img src={footerLogo} alt="AI Academy Logo" className="gdg-logo" />
           <h1>Create Account</h1>
-          <p>Join the GDG GSU community</p>
+          <p>Join the AI Academy community</p>
         </div>
 
         {error && <div className="error-message">{error}</div>}

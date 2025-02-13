@@ -1,5 +1,14 @@
 const ModuleIllustration = () => (
-  <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="module-illustration">
+  <svg 
+    width="100%" 
+    height="100%" 
+    viewBox="0 0 120 120" 
+    preserveAspectRatio="xMidYMid meet" 
+    fill="none" 
+    xmlns="http://www.w3.org/2000/svg" 
+    className="module-illustration"
+    style={{ maxWidth: '120px', maxHeight: '120px' }}
+  >
     {/* Brain Circuit Background */}
     <circle cx="60" cy="60" r="50" fill="#E8F0FE" className="pulse" />
     <path

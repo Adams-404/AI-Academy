@@ -1,14 +1,47 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
+import { useAuth } from '../../contexts/AuthContext'
+import { supabase } from '../../config/supabase'
 import gsuGdgLogo from '../../assets/footer-logo.svg'
 import './Navigation.css'
 
 const DesktopNav = ({ onToggle, isExpanded }) => {
+  const { user } = useAuth()
+  const [isAdmin, setIsAdmin] = useState(false)
+  
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      if (user?.id) {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('is_admin')
+          .eq('id', user.id)
+          .single()
+        
+        if (data && !error) {
+          setIsAdmin(data.is_admin)
+        }
+      }
+    }
+    
+    checkAdminStatus()
+  }, [user])
+
+  useEffect(() => {
+    console.log('User object:', user);
+    console.log('User metadata:', user?.user_metadata);
+  }, [user]);
+
   const handleToggle = () => {
     onToggle(!isExpanded)
   }
 
   const navItems = [
+    ...(user?.user_metadata?.role === 'admin' ? [{
+      to: '/admin/courses',
+      icon: 'admin_panel_settings',
+      label: 'Admin'
+    }] : []),
     { 
       to: '/home', 
       icon: 'cottage',
@@ -41,10 +74,9 @@ const DesktopNav = ({ onToggle, isExpanded }) => {
       <div className="nav-header">
         <img 
           src={gsuGdgLogo}
-          alt="GSU GDG Academy" 
+          alt="AI Academy" 
           className="nav-logo" 
         />
-        <span className="nav-title">AI Academy</span>
         <button 
           className="nav-toggle"
           onClick={handleToggle}

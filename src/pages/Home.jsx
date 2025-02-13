@@ -47,7 +47,7 @@ const Home = () => {
         <CardPatterns />
         <div className="hero-section">
           <div className="hero-content">
-            <h1 className="hero-title">Welcome to GDG AI Academy</h1>
+            <h1 className="hero-title">Welcome to AI Academy</h1>
             <p className="hero-description">
               Your journey into Artificial Intelligence starts here. Learn, build, and connect with 
               AI enthusiasts from around the world.

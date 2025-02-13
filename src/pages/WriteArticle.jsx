@@ -317,26 +317,38 @@ const WriteArticle = ({ isEditing }) => {
 
           <div className="form-group">
             <div className="tags-input-container">
-              {tags.map((tag, index) => (
-                <span key={index} className="tag">
-                  #{tag}
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveTag(tag)}
-                    className="remove-tag"
-                  >
-                    ×
-                  </button>
-                </span>
-              ))}
-              <input
-                type="text"
-                value={tagInput}
-                onChange={(e) => setTagInput(e.target.value)}
-                onKeyDown={handleTagInputKeyDown}
-                placeholder="Add tags..."
-                className="tag-input"
-              />
+              <div className="tags-list">
+                {tags.map((tag, index) => (
+                  <span key={index} className="tag">
+                    #{tag}
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveTag(tag)}
+                      className="remove-tag"
+                    >
+                      ×
+                    </button>
+                  </span>
+                ))}
+              </div>
+              <div className="tags-input-row">
+                <input
+                  type="text"
+                  value={tagInput}
+                  onChange={(e) => setTagInput(e.target.value)}
+                  onKeyDown={handleTagInputKeyDown}
+                  placeholder="Add tags..."
+                  className="tag-input"
+                />
+                <button
+                  type="button"
+                  onClick={handleAddTag}
+                  className="add-tag-btn"
+                  disabled={!tagInput.trim()}
+                >
+                  Add Tag
+                </button>
+              </div>
             </div>
           </div>
         </form>
