@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, Link } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
 import { supabase } from '../../config/supabase'
-import gsuGdgLogo from '../../assets/footer-logo.svg'
+import basirFlowLogo from '../../assets/BasirFlow-Logo.svg'
 import './Navigation.css'
 
 const DesktopNav = ({ onToggle, isExpanded }) => {
@@ -73,9 +73,9 @@ const DesktopNav = ({ onToggle, isExpanded }) => {
     <nav className={`desktop-nav ${isExpanded ? 'expanded' : ''}`}>
       <div className="nav-header">
         <img 
-          src={gsuGdgLogo}
-          alt="AI Academy" 
-          className="nav-logo" 
+          src={basirFlowLogo}
+          alt="BasiraFlow" 
+          className={`nav-logo ${!isExpanded ? 'small' : ''}`}
         />
         <button 
           className="nav-toggle"

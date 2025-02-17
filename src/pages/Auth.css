@@ -50,12 +50,15 @@
 }
 
 .gdg-logo {
-  width: 48px;
+  width: 200px;
   height: auto;
-  margin-bottom: 16px;
+  margin-bottom: 2rem;
   display: block;
-  margin-left: auto;
-  margin-right: auto;
+  transition: transform 0.3s ease;
+}
+
+.gdg-logo:hover {
+  transform: scale(1.05);
 }
 
 .auth-header h1 {

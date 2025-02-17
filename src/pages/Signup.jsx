@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { FaGoogle, FaCode, FaUsers, FaLaptopCode, FaBrain, FaRobot, FaPython, FaNetworkWired, FaComments, FaMicrochip, FaDatabase, FaCamera } from 'react-icons/fa'
-import footerLogo from '../assets/footer-logo.svg'
+import basirFlowLogo from '../assets/BasirFlow-Logo.svg'
 import './Auth.css'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -288,15 +288,8 @@ const Signup = () => {
           ))}
         </div>
 
-        <div className="auth-info-content">
-          <div className="ai-badge">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
-            </svg>
-            AI Academy
-          </div>
-          
-          <h2 className="auth-info-title">Welcome to AI Academy</h2>
+        <div className="auth-info">
+          <h2 className="auth-info-title">Welcome to BasiraFlow</h2>
           <div className="typewriter-text">
             {currentText}
             <span className="cursor">|</span>
@@ -320,9 +313,9 @@ const Signup = () => {
 
       <div className="auth-content">
         <div className="auth-header">
-          <img src={footerLogo} alt="AI Academy Logo" className="gdg-logo" />
+          <img src={basirFlowLogo} alt="BasiraFlow Logo" className="gdg-logo" />
           <h1>Create Account</h1>
-          <p>Join the AI Academy community</p>
+          <p>Join the BasiraFlow community</p>
         </div>
 
         {error && <div className="error-message">{error}</div>}
@@ -451,6 +444,10 @@ const Signup = () => {
         </button>
 
         <div className="auth-footer">
+          <img src={basirFlowLogo} alt="BasiraFlow Logo" className="gdg-logo" />
+          <div className="auth-footer-text">
+            <p>Join the BasiraFlow community</p>
+          </div>
           <p>Already have an account? <Link to="/login">Sign In</Link></p>
         </div>
       </div>

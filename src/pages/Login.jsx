@@ -7,6 +7,7 @@ import {
   FaComments, FaMicrochip, FaDatabase 
 } from 'react-icons/fa'
 import footerLogo from '../assets/footer-logo.svg'
+import basirFlowLogo from '../assets/BasirFlow-Logo.svg'
 import './Auth.css'
 
 const Login = () => {
@@ -186,7 +187,7 @@ const Login = () => {
         </div>
 
         <div className="auth-info">
-          <h2 className="auth-info-title">Welcome to AI Academy</h2>
+          <h2 className="auth-info-title">Welcome to BasiraFlow</h2>
           <div className="typewriter-text">
             {currentText}
             <span className="cursor">|</span>
@@ -210,7 +211,7 @@ const Login = () => {
 
       <div className="auth-content">
         <div className="auth-header">
-          <img src={footerLogo} alt="AI Academy Logo" className="gdg-logo" />
+          <img src={basirFlowLogo} alt="BasiraFlow Logo" className="gdg-logo" />
           <h1>Welcome Back</h1>
           <p>Sign in to continue learning</p>
         </div>

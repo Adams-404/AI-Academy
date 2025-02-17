@@ -40,8 +40,7 @@ const Navigation = () => {
   return (
     <nav className="desktop-nav">
       <div className="nav-logo">
-        <img src="/footer-logo.svg" alt="AI Academy" />
-        <span>AI Academy</span>
+        <img src="/src/assets/BasirFlow-Logo.svg" alt="BasiraFlow" />
       </div>
       <div className="nav-links">
         {navItems.map((item) => (

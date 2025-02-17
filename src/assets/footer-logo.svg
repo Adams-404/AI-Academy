@@ -1,143 +1,85 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="200" height="50" viewBox="0 0 250 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="320" height="80" viewBox="0 0 320 80" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <!-- Modern Gradient Definition -->
-    <linearGradient id="brainGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#6366F1"/>
-      <stop offset="50%" style="stop-color:#8B5CF6"/>
-      <stop offset="100%" style="stop-color:#EC4899"/>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&amp;display=swap');
+    </style>
+    <linearGradient id="flowGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3B82F6"/>
+      <stop offset="100%" style="stop-color:#2563EB"/>
     </linearGradient>
-    
-    <!-- Text Gradient -->
-    <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" style="stop-color:#6366F1"/>
-      <stop offset="50%" style="stop-color:#8B5CF6"/>
-      <stop offset="100%" style="stop-color:#EC4899"/>
+    <linearGradient id="nodeGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#60A5FA"/>
+      <stop offset="100%" style="stop-color:#3B82F6"/>
     </linearGradient>
-
-    <!-- Enhanced Glow -->
-    <filter id="modernGlow" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="1" result="coloredBlur"/>
-      <feMerge>
-        <feMergeNode in="coloredBlur"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
+    <linearGradient id="nodeGradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#818CF8"/>
+      <stop offset="100%" style="stop-color:#6366F1"/>
+    </linearGradient>
+    <linearGradient id="nodeGradient3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#A5B4FC"/>
+      <stop offset="100%" style="stop-color:#818CF8"/>
+    </linearGradient>
+    <!-- Add shimmer animation -->
+    <linearGradient id="flowShimmer" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#3B82F6; stop-opacity: 1">
+        <animate attributeName="offset" values="-1; 1" dur="3s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="50%" style="stop-color:#60A5FA; stop-opacity: 1">
+        <animate attributeName="offset" values="-0.5; 1.5" dur="3s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="100%" style="stop-color:#3B82F6; stop-opacity: 1">
+        <animate attributeName="offset" values="0; 2" dur="3s" repeatCount="indefinite"/>
+      </stop>
+    </linearGradient>
   </defs>
 
-  <!-- Brain Circuit Icon Group -->
-  <g transform="translate(10,0)">
-    <!-- Main Brain Shape -->
-    <path d="M25 12
-             C31 12 35 16 35 22
-             L35 28
-             C35 34 31 38 25 38
-             C19 38 15 34 15 28
-             L15 22
-             C15 16 19 12 25 12Z" 
-          stroke="url(#brainGradient)" 
-          stroke-width="1.5"
-          fill="none"
-          filter="url(#modernGlow)"/>
-
-    <!-- Left Brain Circuits -->
-    <path d="M15 25
-             C18 25 20 23 20 20
-             L20 18
-             M20 20
-             C20 22 22 24 24 24
-             M15 28
-             C18 28 20 30 20 32
-             L20 34
-             M20 32
-             C20 30 22 28 24 28"
-          stroke="url(#brainGradient)"
-          stroke-width="1.2"
-          fill="none"/>
-
-    <!-- Right Brain Circuits -->
-    <path d="M35 25
-             C32 25 30 23 30 20
-             L30 18
-             M30 20
-             C30 22 28 24 26 24
-             M35 28
-             C32 28 30 30 30 32
-             L30 34
-             M30 32
-             C30 30 28 28 26 28"
-          stroke="url(#brainGradient)"
-          stroke-width="1.2"
-          fill="none"/>
-
-    <!-- Center Divider and Stem -->
-    <path d="M25 12 L25 38" 
-          stroke="url(#brainGradient)"
-          stroke-width="1.2"
-          fill="none"/>
+  <!-- Logo Icon -->
+  <g transform="translate(10,10) scale(0.75)">
+    <!-- Background Circle -->
+    <circle cx="40" cy="40" r="38" fill="url(#flowGradient)" fill-opacity="0.1" />
     
-    <!-- Multiple Stem Lines -->
-    <g>
-      <path d="M23 38 L23 45" stroke="url(#brainGradient)" stroke-width="1"/>
-      <path d="M25 38 L25 47" stroke="url(#brainGradient)" stroke-width="1"/>
-      <path d="M27 38 L27 45" stroke="url(#brainGradient)" stroke-width="1"/>
-      <path d="M21 38 L21 43" stroke="url(#brainGradient)" stroke-width="1"/>
-      <path d="M29 38 L29 43" stroke="url(#brainGradient)" stroke-width="1"/>
-    </g>
-
-    <!-- Connection Points -->
-    <g filter="url(#modernGlow)">
-      <circle cx="20" cy="18" r="0.8" fill="url(#brainGradient)"/>
-      <circle cx="30" cy="18" r="0.8" fill="url(#brainGradient)"/>
-      <circle cx="20" cy="34" r="0.8" fill="url(#brainGradient)"/>
-      <circle cx="30" cy="34" r="0.8" fill="url(#brainGradient)"/>
-      <circle cx="24" cy="24" r="0.8" fill="url(#brainGradient)"/>
-      <circle cx="26" cy="24" r="0.8" fill="url(#brainGradient)"/>
-      <circle cx="24" cy="28" r="0.8" fill="url(#brainGradient)"/>
-      <circle cx="26" cy="28" r="0.8" fill="url(#brainGradient)"/>
-    </g>
-
-    <!-- Decorative Elements -->
-    <g>
-      <!-- Top Rays -->
-      <path d="M20 10 L22 12" stroke="url(#brainGradient)" stroke-width="0.8"/>
-      <path d="M25 8 L25 12" stroke="url(#brainGradient)" stroke-width="0.8"/>
-      <path d="M30 10 L28 12" stroke="url(#brainGradient)" stroke-width="0.8"/>
-      
-      <!-- Side Rays -->
-      <path d="M13 20 L15 22" stroke="url(#brainGradient)" stroke-width="0.8"/>
-      <path d="M37 20 L35 22" stroke="url(#brainGradient)" stroke-width="0.8"/>
-      <path d="M13 30 L15 28" stroke="url(#brainGradient)" stroke-width="0.8"/>
-      <path d="M37 30 L35 28" stroke="url(#brainGradient)" stroke-width="0.8"/>
-      
-      <!-- Decorative Dots -->
-      <circle cx="19" cy="14" r="0.4" fill="url(#brainGradient)"/>
-      <circle cx="31" cy="14" r="0.4" fill="url(#brainGradient)"/>
-      <circle cx="19" cy="36" r="0.4" fill="url(#brainGradient)"/>
-      <circle cx="31" cy="36" r="0.4" fill="url(#brainGradient)"/>
-      <circle cx="12" cy="25" r="0.4" fill="url(#brainGradient)"/>
-      <circle cx="38" cy="25" r="0.4" fill="url(#brainGradient)"/>
-    </g>
+    <!-- Flow Pattern -->
+    <path d="M20 40C20 28.954 28.954 20 40 20C51.046 20 60 28.954 60 40C60 51.046 51.046 60 40 60"
+      stroke="url(#flowGradient)" stroke-width="4" stroke-linecap="round">
+      <animateTransform attributeName="transform" type="rotate" from="0 40 40" to="360 40 40" dur="8s" repeatCount="indefinite"/>
+    </path>
+    
+    <!-- Neural Network Nodes -->
+    <circle cx="40" cy="20" r="4" fill="url(#nodeGradient1)">
+      <animate attributeName="r" values="4;5;4" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="60" cy="40" r="4" fill="url(#nodeGradient2)">
+      <animate attributeName="r" values="4;5;4" dur="2s" repeatCount="indefinite" begin="0.5s"/>
+    </circle>
+    <circle cx="40" cy="60" r="4" fill="url(#nodeGradient3)">
+      <animate attributeName="r" values="4;5;4" dur="2s" repeatCount="indefinite" begin="1s"/>
+    </circle>
+    <circle cx="20" cy="40" r="4" fill="url(#nodeGradient1)">
+      <animate attributeName="r" values="4;5;4" dur="2s" repeatCount="indefinite" begin="1.5s"/>
+    </circle>
+    
+    <!-- Center Icon -->
+    <circle cx="40" cy="40" r="6" fill="url(#flowGradient)"/>
+    <path d="M40 32V28M40 52V48M48 40H52M28 40H32" stroke="url(#flowGradient)" stroke-width="3" stroke-linecap="round"/>
   </g>
 
-  <!-- Text Container -->
-  <g filter="url(#modernGlow)">
-    <!-- Modern Text -->
-    <text x="55" y="32" 
-          font-family="'Rajdhani', sans-serif" 
-          font-weight="700" 
-          font-size="26" 
-          fill="url(#textGradient)"
-          style="letter-spacing: 1.5px;">
-      AI ACADEMY
+  <!-- Text "BasiraFlow" -->
+  <g>
+    <text x="90" y="48" font-family="Poppins, sans-serif" font-weight="600" font-size="32">
+      <tspan fill="#1E293B">Basira</tspan><tspan fill="url(#flowShimmer)">Flow</tspan>
     </text>
-
-    <!-- Decorative Elements -->
-    <g opacity="0.8">
-      <path d="M45 25h10" stroke="url(#brainGradient)" stroke-width="0.8"/>
-      <circle cx="190" cy="25" r="0.8" fill="url(#brainGradient)"/>
-      <circle cx="185" cy="25" r="0.6" fill="url(#brainGradient)"/>
-      <circle cx="180" cy="25" r="0.4" fill="url(#brainGradient)"/>
-    </g>
   </g>
+  
+  <!-- Connecting Flow Element -->
+  <path d="M75 40 Q 82 40 88 40" 
+        stroke="url(#flowGradient)" 
+        stroke-width="2" 
+        stroke-linecap="round"
+        opacity="0.6">
+    <animate attributeName="d" 
+             values="M75 40 Q 82 40 88 40;M75 40 Q 82 38 88 40;M75 40 Q 82 42 88 40;M75 40 Q 82 40 88 40" 
+             dur="4s" 
+             repeatCount="indefinite"/>
+  </path>
 </svg>
