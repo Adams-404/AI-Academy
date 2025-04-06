@@ -13,7 +13,7 @@ coverage
 build
 dist
 
-# Misc
+# Misc -- DO NOT COMMIT
 .DS_Store
 .env.local
 .env.development.local
