@@ -210,11 +210,13 @@ const Login = () => {
       </div>
 
       <div className="auth-content">
-        <div className="auth-header">
-          <img src={basirFlowLogo} alt="BasiraFlow Logo" className="gdg-logo" />
-          <h1>Welcome Back</h1>
-          <p>Sign in to continue learning</p>
-        </div>
+        <header className="auth-header">
+          <img src={basirFlowLogo} alt="BasiraFlow Logo" />
+          <div className="typewriter">
+            <span>{currentText}</span>
+            <span className="cursor">|</span>
+          </div>
+        </header>
 
         {error && <div className="error-message">{error}</div>}
 

@@ -1,12 +1,12 @@
-# Environment variables
+# Environment variables -- DO NOT COMMIT
 .env
 
-# Dependencies
+# Dependencies -- DO NOT COMMIT
 node_modules
 .pnp
 .pnp.js
 
-# Testing
+# Testing -- DO NOT COMMIT
 coverage
 
 # Production

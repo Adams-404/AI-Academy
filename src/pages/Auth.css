@@ -346,7 +346,7 @@
 
   /* AI Theme Elements */
   .ai-badge {
-    background: rgba(66, 133, 244, 0.9);
+    background: var(--primary-blue);
     color: white;
     padding: 8px 16px;
     border-radius: 20px;
@@ -357,19 +357,19 @@
     margin-bottom: 24px;
     backdrop-filter: blur(4px);
     transition: all 0.3s ease;
-    box-shadow: 0 2px 4px rgba(66, 133, 244, 0.2);
+    box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+    position: relative;
+    top: 20px;
   }
 
   .ai-badge:hover {
     background: linear-gradient(
       135deg,
-      rgba(66, 133, 244, 0.85) 0%,    /* Slightly more solid on hover */
-      rgba(234, 67, 53, 0.85) 25%,     
-      rgba(251, 188, 4, 0.85) 50%,     
-      rgba(52, 168, 83, 0.85) 75%      
+      #2563eb 0%,
+      #1d4ed8 100%
     );
     transform: translateY(-1px);
-    
+    box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3);
   }
 
   .ai-badge svg {

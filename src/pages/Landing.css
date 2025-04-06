@@ -30,7 +30,7 @@
 }
 
 .landing-logo {
-  width: 200px;
+  width: 300px;
   height: auto;
   display: block;
   transition: transform 0.3s ease;
@@ -423,4 +423,41 @@
   .section-content {
     padding: 0 24px;
   }
+}
+
+.nav-buttons {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.nav-button {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.nav-button-login {
+  color: var(--primary-blue);
+  background: transparent;
+  border: 2px solid var(--primary-blue);
+}
+
+.nav-button-login:hover {
+  background: var(--primary-blue);
+  color: white;
+}
+
+.nav-button-signup {
+  background: var(--primary-blue);
+  color: white;
+  border: 2px solid var(--primary-blue);
+}
+
+.nav-button-signup:hover {
+  background: transparent;
+  color: var(--primary-blue);
 }

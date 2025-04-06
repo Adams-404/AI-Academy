@@ -11,24 +11,17 @@ const Landing = () => {
     <div className="landing-page">
       {/* Hero Section */}
       <header className="landing-header">
-        <div className="decorative-pattern top-right">
-          <DotsPattern />
-        </div>
         <nav className="landing-nav">
           <div className="logo-container">
             <img src="/src/assets/BasirFlow-Logo.svg" alt="BasiraFlow Logo" className="landing-logo" />
-            <span className="logo-text">BasiraFlow</span>
           </div>
           <div className="nav-buttons">
-            <Link to="/login" className="button button-text">Log in</Link>
-            <Link to="/signup" className="button button-primary">Get started</Link>
+            <Link to="/login" className="nav-button nav-button-login">Log in</Link>
+            <Link to="/signup" className="nav-button nav-button-signup">Get started</Link>
           </div>
         </nav>
 
         <div className="hero-content">
-          <div className="decorative-pattern top-left">
-            <DotsPattern />
-          </div>
           <div className="hero-text">
             <h1>Learn AI Development</h1>
             <h2>with BasiraFlow</h2>
@@ -47,9 +40,6 @@ const Landing = () => {
           </div>
           <div className="hero-illustration">
             <WelcomeIllustration />
-          </div>
-          <div className="decorative-pattern bottom-right">
-            <CirclePattern />
           </div>
         </div>
       </header>
@@ -101,9 +91,6 @@ const Landing = () => {
 
       {/* CTA Section */}
       <section className="cta-section">
-        <div className="decorative-pattern cta-right">
-          <DotsPattern />
-        </div>
         <div className="section-content">
           <TypewriterFacts />
           <Link to="/signup" className="button button-primary button-large">

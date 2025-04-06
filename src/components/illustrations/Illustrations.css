@@ -261,4 +261,150 @@
     width: 80px;
     height: 80px;
   }
+}
+
+/* Welcome Illustration Styles */
+.welcome-illustration {
+  max-width: 600px;
+  height: auto;
+  margin: 0 auto;
+  display: block;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .welcome-illustration {
+    max-width: 100%;
+    padding: 20px;
+  }
+}
+
+/* Learning Path Illustration Styles */
+.learning-path-illustrations {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.path-illustration {
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  margin: 0 auto;
+  display: block;
+}
+
+/* Progress Path Animation */
+.progress-path {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: drawPath 2s ease-out forwards;
+}
+
+@keyframes drawPath {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Progress Points Hover Effects */
+.progress-point {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.progress-point:hover {
+  transform: scale(1.2);
+  filter: drop-shadow(0 0 8px rgba(66, 133, 244, 0.6));
+}
+
+/* Floating Elements Animation */
+.float-1 {
+  animation: float 3s ease-in-out infinite;
+}
+
+.float-2 {
+  animation: float 3s ease-in-out infinite 0.5s;
+}
+
+.float-3 {
+  animation: float 3s ease-in-out infinite 1s;
+}
+
+.float-4 {
+  animation: float 3s ease-in-out infinite 1.5s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* AI Elements Hover Effects */
+.ai-elements rect {
+  transition: all 0.3s ease;
+}
+
+.ai-elements rect:hover {
+  transform: scale(1.1) translateY(-5px);
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+}
+
+/* Grid Lines */
+.grid-lines line {
+  opacity: 0.2;
+  stroke-dasharray: 4;
+  animation: gridFade 2s ease-in forwards;
+}
+
+@keyframes gridFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.2;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .path-illustration {
+    max-width: 250px;
+  }
+
+  .floating-elements {
+    transform: scale(0.8);
+  }
+
+  .progress-point {
+    transform: scale(0.9);
+  }
+
+  .progress-point:hover {
+    transform: scale(1.1);
+  }
+
+  .ai-elements rect {
+    transform: scale(0.9);
+  }
+}
+
+@media (max-width: 480px) {
+  .path-illustration {
+    max-width: 200px;
+  }
+
+  .floating-elements {
+    transform: scale(0.7);
+  }
+
+  .grid-lines {
+    display: none;
+  }
 } 
