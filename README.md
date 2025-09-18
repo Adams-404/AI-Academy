@@ -1,6 +1,6 @@
-# BasiraFlow
+# AI Academy 
 
-BasiraFlow is a modern web application for AI learning and development, part of the GDG on Campus initiative at Gombe State University. This platform offers an interactive and engaging learning experience for students interested in artificial intelligence and machine learning.
+AI Academy is a modern web application for AI learning and development, part of the GDG on Campus initiative at Gombe State University. This platform offers an interactive and engaging learning experience for students interested in artificial intelligence and machine learning.
 
 ## 🚀 Features
 
@@ -84,8 +84,7 @@ We welcome contributions from the community. To contribute:
 
 🌟 **Acknowledgements**
 
-*Special thanks to the GDG on Campus Gombe State University team for their support and guidance*.
 
 *Inspired by Google's Material Design principles to provide a seamless and intuitive user experience*.
 
-Join us in transforming AI education at Gombe State University through BasiraFlow!
+Join us in transforming AI education.
