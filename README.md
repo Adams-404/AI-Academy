@@ -1,6 +1,6 @@
 # AI Academy 
 
-AI Academy is a modern web application for AI learning and development, part of the GDG on Campus initiative at Gombe State University. This platform offers an interactive and engaging learning experience for students interested in artificial intelligence and machine learning.
+AI Academy is a modern web application for AI learning and development. This platform offers an interactive and engaging learning experience for students and developers interested in artificial intelligence and machine learning.
 
 ## 🚀 Features
 

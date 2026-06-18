@@ -5,6 +5,7 @@ import { FaGoogle, FaCode, FaUsers, FaLaptopCode, FaBrain, FaRobot, FaPython, Fa
 import basirFlowLogo from '../assets/BasirFlow-Logo.svg'
 import './Auth.css'
 import { v4 as uuidv4 } from 'uuid'
+import { supabase } from '../config/supabase'
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -313,7 +314,7 @@ const Signup = () => {
 
       <div className="auth-content">
         <div className="auth-header">
-          <img src={basirFlowLogo} alt="BasiraFlow Logo" className="gdg-logo" />
+          <img src={basirFlowLogo} alt="BasiraFlow Logo" className="basiraflow-logo" />
           <h1>Create Account</h1>
           <p>Join the BasiraFlow community</p>
         </div>
@@ -444,7 +445,7 @@ const Signup = () => {
         </button>
 
         <div className="auth-footer">
-          <img src={basirFlowLogo} alt="BasiraFlow Logo" className="gdg-logo" />
+          <img src={basirFlowLogo} alt="BasiraFlow Logo" className="basiraflow-logo" />
           <div className="auth-footer-text">
             <p>Join the BasiraFlow community</p>
           </div>

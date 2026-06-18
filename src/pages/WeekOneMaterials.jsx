@@ -241,7 +241,7 @@ const WeekOneMaterials = () => {
     try {
       console.log('Fetching progress for user:', user.id);
       
-      const { data, error } = await supabase
+      let { data, error } = await supabase
         .from('course_progress')
         .select('*')
         .eq('user_id', user.id)
